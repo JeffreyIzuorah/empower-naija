@@ -1,0 +1,210 @@
+@import url("https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/metropolis.min.css");
+/* Reset Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Global Styles */
+  body {
+    font-family: 'metropolis';
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  /* Header Styles */
+  header {
+    background-color: #f2f2f2;
+    padding: 0 20px;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .menu li {
+    display: inline-block;
+    margin-left: 20px;
+  }
+  
+  .menu li a {
+    color: #333;
+    text-decoration: none;
+  }
+  
+  /* Hero Section Styles */
+  .hero {
+    background-image: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('images/hero.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+  }
+  
+  .hero h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+  
+  .hero p {
+    font-size: 20px;
+    margin-bottom: 40px;
+  }
+  
+  .btn {
+    display: inline-block;
+    background-color: #f44336;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 30px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .btn:hover {
+    background-color: #e53935;
+  }
+  
+  /* Impact Section Styles */
+  .impact-section {
+    padding: 60px 0;
+    text-align: center;
+  }
+  
+  .impact-section h2 {
+    font-size: 30px;
+    margin-bottom: 20px;
+  }
+  
+  .impact-cards {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .impact-card {
+    width: calc(33.33% - 20px);
+    padding: 20px;
+    background-color: #f9f9f9;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+  
+  .impact-card img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  .impact-card h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  /* Donation Section Styles */
+  .donation-section {
+    background-color: #f5f5f5;
+    padding: 60px 0;
+    text-align: center;
+  }
+  
+  .donation-section h2 {
+    font-size: 30px;
+    margin-bottom: 20px;
+  }
+  
+  /* Volunteer Section Styles */
+  .volunteer-section {
+    padding: 60px 0;
+    text-align: center;
+  }
+  
+  .volunteer-section h2 {
+    font-size: 30px;
+    margin-bottom: 20px;
+  }
+  
+  /* Impact Stories Section Styles */
+  .impact-stories-section {
+    background-color: #fff;
+    padding: 60px 0;
+    text-align: center;
+  }
+  
+  .impact-stories-section h2 {
+    font-size: 30px;
+    margin-bottom: 20px;
+  }
+  
+  .impact-stories {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .impact-story {
+    width: calc(33.33% - 20px);
+    padding: 20px;
+    background-color: #f9f9f9;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+  
+  .impact-story img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  .impact-story h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  /* Footer Styles */
+  footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+  }
+  
+  .footer-menu li {
+    display: inline-block;
+    margin-left: 10px;
+  }
+  
+  .footer-menu li a {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  /* Volunteer page */
+  

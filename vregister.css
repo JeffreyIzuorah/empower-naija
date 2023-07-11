@@ -1,0 +1,78 @@
+@import url("https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/metropolis.min.css");
+
+.bg-image-vertical {
+position: relative;
+overflow: hidden;
+background-repeat: no-repeat;
+background-position: right center;
+background-size: auto 100%;
+}
+
+@media (min-width: 1025px) {
+.h-custom-2 {
+height: 100%;
+}
+}
+
+body {
+  font-family: 'metropolis';
+  background-color: #1b1c1e;
+  overflow:hidden;
+}
+
+
+header a {
+  text-decoration: none;
+}
+
+header {
+    /* background-color: #f2f2f2; */
+    padding: 0 20px;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 50%;
+    z-index: 100;
+  }
+
+.logo {
+  display: inline-block;
+margin: 15px; /* margin: 20px was off */
+height: 60px;
+width: auto; /* correct proportions to specified height */
+border-radius: 50%; /* makes it a circle */
+ 
+}
+
+/* #brand a {
+  color: white;
+} */
+
+.menu li a {
+    color: white;
+    text-decoration: none;
+  }
+
+ul {
+  list-style: none;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+ul a {
+  color: white;
+}
+
+ul li {
+  padding: 5px;
+  margin-left: 10px;
+}
+
+.form-label, .no-account, .fw-normal {
+  color: white;
+}

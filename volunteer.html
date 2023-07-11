@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Volunteer | Our Project</title>
+  <link rel="stylesheet" type="text/css" href="volunteer.css">
+</head>
+<body>
+  <header>
+    <!-- Your header code here -->
+    <div class="logo">
+        <a href="/">
+        <img src="images/Logo.png" width=76px, height=60px></a>
+    </div>
+<nav>
+    <ul class="menu">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Donate</a></li>
+    <li><a href="volunteer.html">Volunteer</a></li>
+    <li><a href="#">Contact</a></li>
+    <li><a href="#">Login</a></li>
+    </ul>
+</nav>
+</div>
+  </header>
+  
+  <main>
+    <h1>Volunteer Sign Up</h1>
+    <form id="volunteer-signup-form">
+      <div class="form-group">
+        <label for="full-name">Full Name</label>
+        <input type="text" id="full-name" name="full-name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <div class="form-group">
+        <label for="confirm-password">Confirm Password</label>
+        <input type="password" id="confirm-password" name="confirm-password" required>
+      </div>
+      <div class="form-group">
+        <label for="bio">Bio</label>
+        <textarea id="bio" name="bio"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="skills">Skills</label>
+        <input type="text" id="skills" name="skills">
+      </div>
+      <div class="form-group">
+        <label for="experience">Experience</label>
+        <textarea id="experience" name="experience"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="references">References</label>
+        <textarea id="references" name="references"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="id-upload">ID Upload (for verification)</label>
+        <input type="file" id="id-upload" name="id-upload" accept=".pdf,.jpg,.jpeg,.png">
+      </div>
+      <div class="form-group">
+        <input type="checkbox" id="terms" name="terms" required>
+        <label for="terms">I agree to the terms and conditions</label>
+      </div>
+      <button type="submit">Sign Up</button>
+    </form>
+  </main>
+  
+  <footer>
+    <!-- Your footer code here -->
+    <div class="container">
+        <p>&copy; 2023 Volunteer Connect. All rights reserved.</p>
+        <ul class="footer-menu">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+  </footer>
+</body>
+</html>

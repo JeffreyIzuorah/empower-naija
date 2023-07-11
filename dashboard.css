@@ -1,0 +1,100 @@
+/* Reset Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Global Styles */
+  body {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  /* Header Styles */
+  header {
+    background-color: #f2f2f2;
+    padding: 20px 0;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .menu li {
+    display: inline-block;
+    margin-left: 20px;
+  }
+  
+  .menu li a {
+    color: #333;
+    text-decoration: none;
+  }
+  
+  /* Dashboard Styles */
+  .dashboard {
+    padding: 60px 0;
+    text-align: center;
+  }
+  
+  .dashboard h2 {
+    font-size: 30px;
+    margin-bottom: 20px;
+  }
+  
+  .dashboard p {
+    font-size: 20px;
+    margin-bottom: 40px;
+  }
+  
+  .dashboard-cards {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .dashboard-card {
+    width: calc(50% - 20px);
+    padding: 20px;
+    background-color: #f9f9f9;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+  
+  .dashboard-card h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  /* Footer Styles */
+  footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+  }
+  
+  .footer-menu li {
+    display: inline-block;
+    margin-left: 10px;
+  }
+  
+  .footer-menu li a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
