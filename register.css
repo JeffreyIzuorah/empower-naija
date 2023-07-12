@@ -1,0 +1,94 @@
+@import url("https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/metropolis.min.css");
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('/images/hero.jpg') no-repeat;
+    
+    font-family: 'metropolis';
+    background-size: 100%;
+    background-size:cover;
+    overflow: hidden;
+  }
+
+
+
+/* Header Styles */
+header {
+    background-color: #f2f2f2;
+    padding: 0 20px;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .menu li {
+    display: inline-block;
+    margin-left: 20px;
+  }
+  
+  .menu li a {
+    color: #333;
+    text-decoration: none;
+  }
+
+
+/* header ends here */
+
+h1 {
+    color: white;
+    font-family: 'Metropolis', sans-serif;
+    font-style: bold;
+    text-align: center;
+    font-size: 130px;
+    padding-top: 130px;
+}
+
+
+.messagein {
+    color: white;
+    text-align: center;
+    font-family: 'metropolis';
+    font-size: 38px;
+    font-style: 'regular';
+    letter-spacing: -0.4%;
+    line-height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    width: 18em
+}
+
+.linkscontainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height:200px;
+}
+
+
+.links {
+    padding: 5px;
+    color: white;
+    font-family: 'Metropolis';
+    text-align: center;;
+}
