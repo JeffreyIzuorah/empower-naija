@@ -1,62 +1,177 @@
-document.getElementById('volunteer-signup-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-  
-    // Perform form validation
-    var fullName = document.getElementById('full-name').value;
-    var email = document.getElementById('email').value;
-    var password = document.getElementById('password').value;
-    var confirmPassword = document.getElementById('confirm-password').value;
-    var termsChecked = document.getElementById('terms').checked;
-  
-    if (!fullName || !email || !password || !confirmPassword || !termsChecked) {
-      alert('Please fill in all required fields.');
-      return;
-    }
-  
-    if (password !== confirmPassword) {
-      alert('Passwords do not match.');
-      return;
-    }
-  
-    // Perform vetting processes (e.g., backend API calls for verification, checking references)
 
-    // Prepare form data to send to the server
-  var formData = new FormData();
-  formData.append('full-name', document.getElementById('full-name').value);
-  formData.append('email', document.getElementById('email').value);
-  formData.append('password', document.getElementById('password').value);
-  formData.append('confirm-password', document.getElementById('confirm-password').value);
-  formData.append('bio', document.getElementById('bio').value);
-  formData.append('skills', document.getElementById('skills').value);
-  formData.append('experience', document.getElementById('experience').value);
-  formData.append('references', document.getElementById('references').value);
-  formData.append('id-upload', document.getElementById('id-upload').files[0]);
 
-  // Send the form data to the backend
-  // You can use AJAX or fetch to send a request to your backend server to store the user data
-  // In this example, we are using fetch
-  fetch('your-backend-url', {
-    method: 'POST',
-    body: formData
-  })
-    .then(function(response) {
-      if (response.ok) {
-        // Clear the form fields
-        document.getElementById('volunteer-signup-form').reset();
+const firebaseConfig = {
+  apiKey: "AIzaSyDyoUGXsujgMI9yvLftNDneZweyWZSeb8s",
+  authDomain: "empower-naija.firebaseapp.com",
+  projectId: "empower-naija",
+  storageBucket: "empower-naija.appspot.com",
+  messagingSenderId: "31519409443",
+  appId: "1:31519409443:web:397a432b4ec9c19a0db896",
+  measurementId: "G-CN0F62EFT3"
+};
 
-        // Redirect to a confirmation page or show a success message
-        alert('Thank you for signing up as a volunteer!');
-      } else {
-        // Handle errors if the request fails
-        alert('Failed to sign up. Please try again.');
-      }
-    })
-    .catch(function(error) {
-      console.error('Error:', error);
-      alert('An error occurred. Please try again later.');
+
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Function to render impact entries in the table
+function renderImpactEntries(entries) {
+  const impactTable = document.querySelector('.impact-table tbody');
+
+  // Clear existing table rows
+  impactTable.innerHTML = '';
+
+  entries.forEach(entry => {
+    const { id, date, hours, peopleHelped, location } = entry;
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${date.toDate().toLocaleDateString()}</td>
+      <td>${hours}</td>
+      <td>${peopleHelped}</td>
+      <td>${location}</td>
+      <td>
+        <button class="btn btn-edit" data-entry-id="${id}">Edit</button>
+        <button class="btn btn-delete" data-entry-id="${id}">Delete</button>
+      </td>
+    `;
+    impactTable.appendChild(row);
+  });
+
+  // Add event listeners to the edit and delete buttons
+  const editButtons = document.querySelectorAll('.btn-edit');
+  const deleteButtons = document.querySelectorAll('.btn-delete');
+
+  editButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const entryId = button.dataset.entryId;
+      // Get the entry data from Firestore
+      db.collection('impact_entries').doc(entryId).get()
+        .then(doc => {
+          if (doc.exists) {
+            const entry = doc.data();
+            // Populate the form fields with the existing values
+            document.getElementById('date').value = entry.date.toDate().toISOString().split('T')[0];
+            document.getElementById('hours').value = entry.hours;
+            document.getElementById('people-helped').value = entry.peopleHelped;
+            document.getElementById('location').value = entry.location;
+            // Set the entry ID in the form's dataset
+            const impactForm = document.getElementById('impact-form');
+            impactForm.dataset.entryId = entryId;
+            // Show the modal for editing
+            const modal = document.getElementById('impact-modal');
+            modal.style.display = 'block';
+          } else {
+            console.log('Entry not found');
+          }
+        })
+        .catch(error => {
+          console.error('Error getting impact entry:', error);
+        });
     });
+  });
+
+  deleteButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const entryId = button.dataset.entryId;
+      deleteEntry(entryId);
+    });
+  });
+}
+
+// Handle form submission for adding/editing impact entries
+const impactForm = document.getElementById('impact-form');
+impactForm.addEventListener('submit', event => {
+  event.preventDefault();
+
+  const date = document.getElementById('date').value;
+  const hours = document.getElementById('hours').value;
+  const peopleHelped = document.getElementById('people-helped').value;
+  const location = document.getElementById('location').value;
+
+  // Check if it's an edit or add operation
+  const entryId = impactForm.dataset.entryId;
+
+  if (entryId) {
+    // Update the existing entry in Firestore
+    db.collection('impact_entries').doc(entryId).update({
+      date: firebase.firestore.Timestamp.fromDate(new Date(date)),
+      hours,
+      peopleHelped,
+      location
+    })
+      .then(() => {
+        console.log('Entry updated successfully');
+        // Clear form fields and close modal
+        impactForm.reset();
+        delete impactForm.dataset.entryId; // Remove the entry ID from the form dataset
+        const modal = document.getElementById('impact-modal');
+        modal.style.display = 'none';
+      })
+      .catch(error => {
+        console.error('Error updating impact entry:', error);
+      });
+  } else {
+    // Create a new entry in Firestore
+    db.collection('impact_entries').add({
+      date: firebase.firestore.Timestamp.fromDate(new Date(date)),
+      hours,
+      peopleHelped,
+      location
+    })
+      .then(() => {
+        console.log('Entry added successfully');
+        // Clear form fields and close modal
+        impactForm.reset();
+        const modal = document.getElementById('impact-modal');
+        modal.style.display = 'none';
+      })
+      .catch(error => {
+        console.error('Error adding impact entry:', error);
+      });
+  }
 });
-  
-    // Submit the form data to the backend
-    // You can use AJAX or fetch to send a request to your backend server to store the user data
-  
+
+// Handle deletion of impact entries
+function deleteEntry(entryId) {
+  db.collection('impact_entries').doc(entryId).delete()
+    .then(() => {
+      console.log('Entry deleted successfully');
+    })
+    .catch(error => {
+      console.error('Error deleting impact entry:', error);
+    });
+}
+
+// Listen for real-time updates to the impact entries collection
+db.collection('impact_entries').onSnapshot(snapshot => {
+  const entries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  renderImpactEntries(entries);
+});
+
+// Open impact modal
+document.addEventListener('DOMContentLoaded', () => {
+  const addEntryBtn = document.querySelector('.btn-add');
+  const modal = document.getElementById('impact-modal');
+  const modalCloseBtn = document.querySelector('.modal-close');
+
+  addEntryBtn.addEventListener('click', () => {
+    // Clear form fields and remove data-entry-id attribute
+    impactForm.reset();
+    delete impactForm.dataset.entryId; // Remove the entry ID from the form dataset
+    modal.style.display = 'block';
+  });
+
+  modalCloseBtn.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+
+  window.addEventListener('click', event => {
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+});
+
+

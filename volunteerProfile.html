@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile</title>
+  <link rel="stylesheet" href="volunteerProfile.css">
+</head>
+<body>
+  <header>
+    <div class="logo">
+        <a href="/">
+        <img src="images/Logo.png" width=76px, height=60px></a>
+    </div>
+<nav>
+    <ul class="menu">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Donate</a></li>
+    <li><a href="Vregister.html">Volunteer</a></li>
+    <li><a href="Lregister.html">Contact</a></li>
+    <li><a href="dashboard.html">Login</a></li>
+    </ul>
+</nav>
+
+  </header>
+
+  <div class="main-container">
+    <!-- <aside class="sidebar">
+      <ul class="sidebar-menu">
+        <li><a href="#" class="active">Profile</a></li>
+        <li><a href="#">My Impact</a></li>
+        <li><a href="#">Settings</a></li>
+      </ul>
+    </aside> -->
+
+    <section class="profile-section">
+      <div class="profile-container">
+        <h2>My Profile</h2>
+        <form class="profile-form">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" value="John Doe" disabled>
+          </div>
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location" value="Lagos, Nigeria">
+          </div>
+          <div class="form-group">
+            <label for="skills">Skills</label>
+            <textarea id="skills" name="skills">Teaching, Web Development, Graphic Design</textarea>
+          </div>
+          <div class="form-group">
+            <label for="bio">Bio</label>
+            <textarea id="bio" name="bio">I am passionate about volunteering and helping others. I have experience in teaching and web development and I'm excited to make a positive impact.</textarea>
+          </div>
+          <div class="form-group">
+            <label for="profile-pic">Profile Picture</label>
+            <input type="file" id="profile-pic" name="profile-pic">
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn">Save Changes</button>
+            <button type="button" class="btn btn-secondary">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2023 Volunteer Connect. All rights reserved.</p>
+      <ul class="footer-menu">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+</html>

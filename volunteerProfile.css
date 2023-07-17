@@ -12,7 +12,6 @@
     font-family: 'metropolis';
     font-size: 16px;
     line-height: 2.0;
-    overflow: hidden;
   }
   
   .container {
@@ -28,7 +27,7 @@ header {
     height: 70px;
     display: flex;
     justify-content: space-between;
-    position: fixed;
+    
     top: 0;
     left: 0;
     width: 100%;
@@ -59,39 +58,85 @@ header {
 
 /* header ends here */
   
-  /* Dashboard Styles */
-  .dashboard {
-    padding: 60px 0;
-    text-align: center;
+  /* Main Container Styles */
+  .main-container {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 20px;
   }
   
-  .dashboard h2 {
-    font-size: 30px;
+  /* Sidebar Styles */
+  .sidebar {
+    background-color: #f2f2f2;
+    width: 20%;
+    min-width: 200px;
+    padding: 20px;
+  }
+  
+  .sidebar-menu li {
+    margin-bottom: 10px;
+  }
+  
+  .sidebar-menu a {
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .sidebar-menu .active {
+    font-weight: bold;
+  }
+  
+  /* Profile Section Styles */
+  .profile-section {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  .profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .profile-container h2 {
+    font-size: 24px;
     margin-bottom: 20px;
   }
   
-  .dashboard p {
-    font-size: 20px;
-    margin-bottom: 40px;
+  .profile-form .form-group {
+    margin-bottom: 20px;
   }
   
-  .dashboard-cards {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+  .profile-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
   }
   
-  .dashboard-card {
-    width: calc(50% - 20px);
-    padding: 20px;
-    background-color: #f9f9f9;
-    margin-bottom: 40px;
-    text-align: center;
+  .profile-form input[type="text"],
+  .profile-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
   }
   
-  .dashboard-card h3 {
-    font-size: 24px;
-    margin-bottom: 10px;
+  .profile-form .form-actions {
+    margin-top: 20px;
+  }
+  
+  .profile-form .btn {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .profile-form .btn-secondary {
+    background-color: #f2f2f2;
+    color: #333;
+    margin-left: 10px;
   }
   
   /* Footer Styles */
@@ -111,4 +156,6 @@ header {
     color: #fff;
     text-decoration: none;
   }
+  
+
   

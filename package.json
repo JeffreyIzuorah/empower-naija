@@ -1,0 +1,22 @@
+{
+  "name": "empower-naija",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jeffreywastaken/emporwer-naija.git"
+  },
+  "author": "Izuorah Jeffrey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jeffreywastaken/emporwer-naija/issues"
+  },
+  "homepage": "https://github.com/Jeffreywastaken/emporwer-naija#readme",
+  "dependencies": {
+    "firebase": "^8.6.8"
+  }
+}

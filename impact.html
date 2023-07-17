@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Impact</title>
+  <link rel="stylesheet" href="impact.css">
+</head>
+<body>
+  <header>
+    <div class="logo">
+        <a href="/">
+        <img src="images/Logo.png" width=76px, height=60px></a>
+    </div>
+<nav>
+    <ul class="menu">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="Donate.html">Donate</a></li>
+    <li><a href="register.html">Register</a></li>
+    <li><a href="dashboard.html">Contact</a></li>
+    <li><a href="login.html">Login</a></li>
+    </ul>
+</nav>
+  </header>
+
+  <div class="main-container">
+    <section class="impact-section">
+      <div class="impact-container">
+        <h2>My Impact</h2>
+        <table class="impact-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Hours Volunteered</th>
+              <th>People Helped</th>
+              <th>Location Volunteered</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2023-07-03</td>
+              <td>3</td>
+              <td>5</td>
+              <td>Location 1</td>
+              <td>
+                <button class="btn btn-edit">Edit</button>
+                <button class="btn btn-delete">Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2023-07-02</td>
+              <td>2</td>
+              <td>3</td>
+              <td>Location 2</td>
+              <td>
+                <button class="btn btn-edit">Edit</button>
+                <button class="btn btn-delete">Delete</button>
+              </td>
+            </tr>
+            <!-- Add more rows for each impact entry -->
+          </tbody>
+        </table>
+        <button class="btn btn-add">Add New Entry</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Add/Edit Impact Entry Modal -->
+  <div id="impact-modal" class="modal">
+    <div class="modal-content">
+      <span class="modal-close">&times;</span>
+      <h2>Add/Edit Impact Entry</h2>
+      <form id="impact-form">
+        <div class="form-group">
+          <label for="date">Date:</label>
+          <input type="date" id="date" required>
+        </div>
+        <div class="form-group">
+          <label for="hours">Hours Volunteered:</label>
+          <input type="number" id="hours" required>
+        </div>
+        <div class="form-group">
+          <label for="people-helped">People Helped:</label>
+          <input type="number" id="people-helped" required>
+        </div>
+        <div class="form-group">
+          <label for="location">Location Volunteered:</label>
+          <input type="text" id="location" required>
+        </div>
+        <button type="submit" class="btn btn-submit">Save</button>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2023 Volunteer Connect. All rights reserved.</p>
+      <ul class="footer-menu">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyDyoUGXsujgMI9yvLftNDneZweyWZSeb8s",
+      authDomain: "empower-naija.firebaseapp.com",
+      projectId: "empower-naija",
+      storageBucket: "empower-naija.appspot.com",
+      messagingSenderId: "31519409443",
+      appId: "1:31519409443:web:397a432b4ec9c19a0db896",
+      measurementId: "G-CN0F62EFT3"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-firestore.js"></script>
+  <script src="script.js"></script>
+  
+  <script>
+// JavaScript Code
+document.addEventListener("DOMContentLoaded", function () {
+  // Get the modal
+  var modal = document.getElementById("impact-modal");
+
+  // Get the button that opens the modal
+  var btn = document.querySelector(".btn-add");
+
+  // Get the <span> element that closes the modal
+  var span = document.querySelector(".modal-close");
+
+  // When the user clicks on the button, open the modal
+  btn.addEventListener("click", function () {
+    modal.style.display = "block";
+  });
+
+  // When the user clicks on <span> (x), close the modal
+  span.addEventListener("click", function () {
+    modal.style.display = "none";
+  });
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.addEventListener("click", function (event) {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  });
+});
+  </script>
+</body>
+</html>
