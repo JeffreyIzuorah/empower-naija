@@ -1,94 +1,78 @@
 @import url("https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/metropolis.min.css");
 
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('/images/hero.jpg') no-repeat;
-    
-    font-family: 'metropolis';
-    background-size: 100%;
-    background-size:cover;
-    overflow: hidden;
-  }
+.bg-image-vertical {
+position: relative;
+overflow: hidden;
+background-repeat: no-repeat;
+background-position: right center;
+background-size: auto 100%;
+}
+
+@media (min-width: 1025px) {
+.h-custom-2 {
+height: 100%;
+}
+}
+
+body {
+  font-family: 'metropolis';
+  background-color: #1b1c1e;
+  overflow:hidden;
+}
 
 
+header a {
+  text-decoration: none;
+}
 
-/* Header Styles */
 header {
-    background-color: #f2f2f2;
+    /* background-color: #f2f2f2; */
     padding: 0 20px;
-    height: 70px;
+    height: 50px;
     display: flex;
     justify-content: space-between;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 50%;
     z-index: 100;
   }
-  
-  nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .logo {
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  .menu li {
-    display: inline-block;
-    margin-left: 20px;
-  }
-  
-  .menu li a {
-    color: #333;
+
+.logo {
+  display: inline-block;
+margin: 15px; /* margin: 20px was off */
+height: 60px;
+width: auto; /* correct proportions to specified height */
+border-radius: 50%; /* makes it a circle */
+ 
+}
+
+/* #brand a {
+  color: white;
+} */
+
+.menu li a {
+    color: white;
     text-decoration: none;
   }
 
-
-/* header ends here */
-
-h1 {
-    color: white;
-    font-family: 'Metropolis', sans-serif;
-    font-style: bold;
-    text-align: center;
-    font-size: 130px;
-    padding-top: 130px;
+ul {
+  list-style: none;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 
-
-.messagein {
-    color: white;
-    text-align: center;
-    font-family: 'metropolis';
-    font-size: 38px;
-    font-style: 'regular';
-    letter-spacing: -0.4%;
-    line-height: auto;
-    margin-left: auto;
-    margin-right: auto;
-    width: 18em
+ul a {
+  color: white;
 }
 
-.linkscontainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height:200px;
+ul li {
+  padding: 5px;
+  margin-left: 10px;
 }
 
-
-.links {
-    padding: 5px;
-    color: white;
-    font-family: 'Metropolis';
-    text-align: center;;
+.form-label, .no-account, .fw-normal {
+  color: white;
 }
