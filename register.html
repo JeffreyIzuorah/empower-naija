@@ -39,33 +39,40 @@
 
         <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
 
-          <form style="width: 23rem;">
+          <form style="width: 23rem;" action="/staff/register" method="POST">
             <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Register</h3>
           
             <div class="form-outline mb-4">
-              <input type="name" id="name" class="form-control form-control-lg" required>
+              <input type="name" id="name" name="name" class="form-control form-control-lg" required>
               <label class="form-label" for="name">Full name</label>
             </div>
           
             <div class="form-outline mb-4">
-              <input type="email" id="email" class="form-control form-control-lg" required>
+              <input type="email" id="email" name="email" class="form-control form-control-lg" required>
               <label class="form-label" for="email">Email address</label>
             </div>
           
-            <div class="form-outline mb-4">
-              <input type="password" id="password" class="form-control form-control-lg" required>
-              <label class="form-label" for="password">Password</label>
+            <div class="form-group">
+              <div class="form-outline mb-4">
+                <input type="password" id="password" name="password" class="form-control form-control-lg" required>
+                <label class="form-label" for="password">Password</label>
+                <input type="checkbox" id="password-toggle" class="form-check-input">
+                <label class="form-check-label" for="password-toggle">Show Password</label>
+              </div>
+          
+              <div class="form-outline mb-4">
+                <input type="password" id="confirm-password" name="confirm-password" class="form-control form-control-lg" required>
+                <label class="form-label" for="confirm-password">Confirm Password</label>
+              </div>
             </div>
           
-            <div class="form-outline mb-4">
-              <input type="password" id="confirm-password" class="form-control form-control-lg" required>
-              <label class="form-label" for="confirm-password">Confirm Password</label>
-            </div>
-          
-            <input type="submit" value="Register" id="register" class="w-100 btn btn-lg btn-primary"/>
+            <input type="submit" value="register" id="register" class="w-100 btn btn-lg btn-primary" />
           
             <p class="no-account">Already have an account? <a href="login.html" class="link-info">Login here</a></p>
+          
+            <div id="flash-messages"></div>
           </form>
+          
           
 
         </div>
@@ -85,6 +92,7 @@
 <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
 <script src="register.js"></script>
+<script src="dashboard.js"></script>
  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>   
 </body>

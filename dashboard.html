@@ -9,25 +9,24 @@
 <body>
   <header>
     <div class="logo">
-        <a href="/">
-        <img src="images/Logo.png" width=76px, height=60px></a>
+      <a href="/">
+        <img src="images/Logo.png" width="76px" height="60px">
+      </a>
     </div>
-<nav>
-    <ul class="menu">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="#">About</a></li>
-    <li><a href="#">Donate</a></li>
-    <li><a href="Vregister.html">Volunteer</a></li>
-    <li><a href="Lregister.html">Contact</a></li>
-    <li><a href="dashboard.html">Login</a></li>
-    </ul>
-</nav>
-
-</header>
-
+    <nav>
+      <ul class="menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Donate</a></li>
+        <li><a href="Vregister.html">Volunteer</a></li>
+        <li><a href="Lregister.html">Contact</a></li>
+        <li><a href="#" id="logout">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
   <section class="dashboard">
     <div class="container">
-      <h2>Welcome, John!</h2>
+      <h2 id="welcome-message"></h2>
       <p>Here's your volunteer dashboard.</p>
       <div class="dashboard-cards">
         <div class="dashboard-card">
@@ -53,15 +52,8 @@
       </div>
     </div>
   </section>
-
-  <footer>
-    <div class="container">
-      <p>&copy; 2023 Volunteer Connect. All rights reserved.</p>
-      <ul class="footer-menu">
-        <li><a href="#">Privacy Policy</a></li>
-        <li><a href="#">Terms of Service</a></li>
-      </ul>
-    </div>
-  </footer>
+  <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-auth.js"></script>
+  <script src="dashboard.js"></script>
 </body>
 </html>

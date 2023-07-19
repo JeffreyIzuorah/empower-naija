@@ -76,3 +76,24 @@ ul li {
 .form-label, .no-account, .fw-normal {
   color: white;
 }
+
+/* Flash Message Styles */
+.flash-message {
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .success {
+    background-color: #28a745;
+    color: #fff;
+  }
+  
+  .error {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .link-info {
+    color: #0d6efd;
+    text-decoration: none;
+  }

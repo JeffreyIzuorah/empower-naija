@@ -38,32 +38,32 @@
       <div class="profile-container">
         <h2>My Profile</h2>
         <form class="profile-form">
-          <div class="form-group">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" name="name" value="John Doe" disabled>
-          </div>
-          <div class="form-group">
-            <label for="location">Location</label>
-            <input type="text" id="location" name="location" value="Lagos, Nigeria">
-          </div>
-          <div class="form-group">
-            <label for="skills">Skills</label>
-            <textarea id="skills" name="skills">Teaching, Web Development, Graphic Design</textarea>
-          </div>
-          <div class="form-group">
-            <label for="bio">Bio</label>
-            <textarea id="bio" name="bio">I am passionate about volunteering and helping others. I have experience in teaching and web development and I'm excited to make a positive impact.</textarea>
-          </div>
-          <div class="form-group">
-            <label for="profile-pic">Profile Picture</label>
-            <input type="file" id="profile-pic" name="profile-pic">
-          </div>
-
-          <div class="form-actions">
-            <button type="submit" class="btn">Save Changes</button>
-            <button type="button" class="btn btn-secondary">Cancel</button>
-          </div>
-        </form>
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name">
+            </div>
+            <div class="form-group">
+              <label for="location">Location</label>
+              <input type="text" id="location" name="location" placeholder="Enter your location">
+            </div>
+            <div class="form-group">
+              <label for="skills">Skills</label>
+              <textarea id="skills" name="skills" placeholder="Enter your skills"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="bio">Bio</label>
+              <textarea id="bio" name="bio" placeholder="Enter your bio"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="profile-pic">Profile Picture</label>
+              <input type="file" id="profile-pic" name="profile-pic">
+            </div>
+  
+            <div class="form-actions">
+              <button type="submit" class="btn">Save Changes</button>
+              <button type="button" class="btn btn-secondary">Cancel</button>
+            </div>
+          </form>
       </div>
     </section>
   </div>
@@ -77,5 +77,10 @@
       </ul>
     </div>
   </footer>
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-firestore.js"></script>
+  
+<script src="profile.js"></script>
 </body>
 </html>
