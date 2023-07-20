@@ -1,0 +1,139 @@
+@import url("https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/metropolis.min.css");
+
+/* Reset Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Global Styles */
+body {
+    font-family: 'metropolis';
+    font-size: 16px;
+    line-height: 2.0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header Styles */
+header {
+    background-color: #f2f2f2;
+    padding: 0 20px;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.menu li {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.menu li a {
+    color: #333;
+    text-decoration: none;
+}
+
+
+/* Donation Styles */
+.donation {
+    padding: 60px 0;
+    text-align: center;
+}
+
+.donation h2 {
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+.donation p {
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+
+#donation-form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="number"],
+input[type="text"],
+input[type="email"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+textarea {
+    resize: vertical;
+}
+
+button.btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer-menu li {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.footer-menu li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Add this to your CSS styles */
+#map {
+    height: 400px; /* Set a fixed height for the map container */
+    margin-bottom: 20px; /* Optional: Add some spacing between the map and the form */
+  }
+  
