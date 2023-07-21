@@ -86,7 +86,7 @@ function displayOpportunities(opportunities) {
       opportunityCard.classList.add("location");
   
       const locationElement = document.createElement("h3");
-      locationElement.textContent = opportunity.location; // Display the opportunity's location
+      locationElement.textContent = opportunity.locationName; // Display the opportunity's location name
       opportunityCard.appendChild(locationElement);
   
       const descriptionElement = document.createElement("p");
@@ -113,21 +113,38 @@ function displayOpportunities(opportunities) {
   }
 
   // Function to fetch user's location, opportunities, and display the sorted opportunities
-  function fetchAndDisplayOpportunities() {
-    getUserLocation()
-      .then((userLocation) => {
-        return getOpportunities()
-          .then((opportunities) => {
-            return sortOpportunitiesByDistance(userLocation, opportunities);
-          });
-      })
-      .then((sortedOpportunities) => {
-        displayOpportunities(sortedOpportunities);
-      })
-      .catch((error) => {
-        console.error("Error fetching and displaying opportunities:", error);
-      });
+ // Function to fetch user's location, opportunities, and display the sorted opportunities
+async function fetchAndDisplayOpportunities() {
+    try {
+      const userLocation = await getUserLocation();
+      const opportunities = await getOpportunities();
+      const sortedOpportunities = sortOpportunitiesByDistance(userLocation, opportunities);
+      displayOpportunities(sortedOpportunities);
+    } catch (error) {
+      console.error("Error fetching and displaying opportunities:", error);
+    }
   }
+  
 
   // Call the function to fetch and display opportunities when the page loads
   window.addEventListener("DOMContentLoaded", fetchAndDisplayOpportunities);
+
+  function getLocationName(lat, lng) {
+    return new Promise((resolve, reject) => {
+      const geocoder = new google.maps.Geocoder();
+      const latlng = { lat: parseFloat(lat), lng: parseFloat(lng) };
+  
+      geocoder.geocode({ location: latlng }, (results, status) => {
+        if (status === "OK") {
+          if (results[0]) {
+            resolve(results[0].formatted_address);
+          } else {
+            reject(new Error("Location not found"));
+          }
+        } else {
+          reject(new Error("Geocoder failed due to: " + status));
+        }
+      });
+    });
+  }
+  
