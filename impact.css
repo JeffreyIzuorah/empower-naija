@@ -99,6 +99,15 @@ header {
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
+
+  .impact-table {
+    display: none;
+  }
+  
+  .btn-add {
+    display: none;
+  }
+  
   
   .btn-add {
     margin-top: 20px;

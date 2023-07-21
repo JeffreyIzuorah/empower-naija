@@ -13,19 +13,21 @@ const firebaseConfig = {
 
 
 
-  // Function to calculate the distance between two coordinates using the Haversine formula
-  function calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Radius of the earth in km
-    const dLat = deg2rad(lat2 - lat1);
-    const dLon = deg2rad(lon2 - lon1);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // Distance in km
-    return distance;
-  }
+// Function to calculate the distance between two coordinates using the Haversine formula
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Radius of the earth in km
+  const dLat = deg2rad(lat2 - lat1);
+  const dLon = deg2rad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in km
+  return Number(distance.toFixed(2)); // Return the distance as a number with 2 decimal places
+}
+
+
 
   function deg2rad(deg) {
     return deg * (Math.PI / 180);
@@ -62,9 +64,10 @@ function getUserLocation() {
   }
   
 
-  // Function to fetch all opportunities from Firestore
-  function getOpportunities() {
-    return db.collection("opportunities").get()
+// Function to fetch all opportunities from Firestore
+function getOpportunities() {
+    return db.collection("opportunities")
+      .get()
       .then((querySnapshot) => {
         const opportunities = [];
         querySnapshot.forEach((doc) => {
@@ -73,11 +76,16 @@ function getUserLocation() {
           opportunities.push(opportunity);
         });
         return opportunities;
+      })
+      .catch((error) => {
+        console.error("Error fetching opportunities:", error);
+        throw error;
       });
   }
+  
 
 // Function to display the sorted opportunities on the page
-function displayOpportunities(opportunities) {
+function displayOpportunities(userLocation, opportunities) {
     const opportunitiesContainer = document.querySelector(".locations");
     opportunitiesContainer.innerHTML = ""; // Clear previous opportunities
   
@@ -93,6 +101,16 @@ function displayOpportunities(opportunities) {
       descriptionElement.textContent = opportunity.description;
       opportunityCard.appendChild(descriptionElement);
   
+      const distanceElement = document.createElement("p");
+      const distance = calculateDistance(
+        userLocation.lat,
+        userLocation.lng,
+        opportunity.location.latitude,
+        opportunity.location.longitude
+      );
+      distanceElement.textContent = `Distance: ${distance.toFixed(2)} km`; // Display the distance
+      opportunityCard.appendChild(distanceElement);
+  
       const volunteerButton = document.createElement("button");
       volunteerButton.classList.add("btn");
       volunteerButton.textContent = "Volunteer";
@@ -101,6 +119,10 @@ function displayOpportunities(opportunities) {
       opportunitiesContainer.appendChild(opportunityCard);
     });
   }
+  
+  
+  
+  
 
   // Function to sort the opportunities by distance from the user's location
   function sortOpportunitiesByDistance(userLocation, opportunities) {
@@ -113,16 +135,22 @@ function displayOpportunities(opportunities) {
   }
 
   // Function to fetch user's location, opportunities, and display the sorted opportunities
- // Function to fetch user's location, opportunities, and display the sorted opportunities
-async function fetchAndDisplayOpportunities() {
-    try {
-      const userLocation = await getUserLocation();
-      const opportunities = await getOpportunities();
-      const sortedOpportunities = sortOpportunitiesByDistance(userLocation, opportunities);
-      displayOpportunities(sortedOpportunities);
-    } catch (error) {
-      console.error("Error fetching and displaying opportunities:", error);
-    }
+// Function to fetch user's location, opportunities, and display the sorted opportunities
+function fetchAndDisplayOpportunities() {
+    let userLocation; // Declare userLocation variable here
+  
+    getUserLocation()
+      .then((location) => {
+        userLocation = location; // Assign the value of location to userLocation
+        return getOpportunities();
+      })
+      .then((opportunities) => {
+        const sortedOpportunities = sortOpportunitiesByDistance(userLocation, opportunities);
+        displayOpportunities(userLocation, sortedOpportunities); // Pass userLocation here
+      })
+      .catch((error) => {
+        console.error("Error fetching and displaying opportunities:", error);
+      });
   }
   
 
@@ -147,4 +175,3 @@ async function fetchAndDisplayOpportunities() {
       });
     });
   }
-  

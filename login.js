@@ -16,12 +16,12 @@ const auth = firebase.auth();
 
 // Check if a user is already logged in
 auth.onAuthStateChanged(user => {
-    if (user) {
-      // User is logged in, redirect to dashboard
-      window.location.href = 'dashboard.html';
-    }
-  });
-  
+  if (user) {
+    // User is logged in, redirect to dashboard
+    window.location.href = 'dashboard.html';
+  }
+});
+
 
 // Get references to form elements
 const emailInput = document.getElementById('email');

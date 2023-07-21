@@ -90,7 +90,7 @@ cancelButton.addEventListener('click', () => {
 // Get the reference to the location input field
 // const locationInput = document.getElementById('location');
 
-// Function to get the user's current location
+// Function to get the user's current location and save it to Firestore
 function getCurrentLocation() {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -98,23 +98,17 @@ function getCurrentLocation() {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
   
-          // Use reverse geocoding to get the user's location
-          const geocoder = new google.maps.Geocoder();
-          const latlng = { lat: latitude, lng: longitude };
-  
-          geocoder.geocode({ location: latlng }, (results, status) => {
-            if (status === 'OK') {
-              if (results[0]) {
-                // Get the formatted address and set it as the value of the location input field
-                const location = results[0].formatted_address;
-                const approximateLocation = location.replace(/^[\s\S]*?,\s*/, '');
-                locationInput.value = approximateLocation;
-              } else {
-                console.error('No results found');
-              }
-            } else {
-              console.error('Geocoder failed due to: ' + status);
-            }
+          // Save the user's latitude and longitude to Firestore
+          const userRef = db.collection('users').doc(auth.currentUser.uid);
+          userRef.update({
+            latitude: latitude,
+            longitude: longitude
+          })
+          .then(() => {
+            console.log('User location updated successfully');
+          })
+          .catch(error => {
+            console.error('Error updating user location:', error);
           });
         },
         error => {
@@ -126,7 +120,6 @@ function getCurrentLocation() {
     }
   }
   
-
-// Call the function to get the current location when the page loads
-getCurrentLocation();
+  // Call the function to get the current location and save it to Firestore when the page loads
+  getCurrentLocation();
 

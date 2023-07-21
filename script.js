@@ -15,6 +15,7 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+const auth = firebase.auth();
 
 // Function to render impact entries in the table
 function renderImpactEntries(entries) {
@@ -93,6 +94,9 @@ impactForm.addEventListener('submit', event => {
   // Check if it's an edit or add operation
   const entryId = impactForm.dataset.entryId;
 
+  const user = firebase.auth().currentUser;
+  const userId = user ? user.uid : null;
+
   if (entryId) {
     // Update the existing entry in Firestore
     db.collection('impact_entries').doc(entryId).update({
@@ -118,7 +122,8 @@ impactForm.addEventListener('submit', event => {
       date: firebase.firestore.Timestamp.fromDate(new Date(date)),
       hours,
       peopleHelped,
-      location
+      location,
+      userId // Add the user's ID to the impact entry document
     })
       .then(() => {
         console.log('Entry added successfully');
@@ -133,6 +138,7 @@ impactForm.addEventListener('submit', event => {
   }
 });
 
+
 // Handle deletion of impact entries
 function deleteEntry(entryId) {
   db.collection('impact_entries').doc(entryId).delete()
@@ -145,10 +151,27 @@ function deleteEntry(entryId) {
 }
 
 // Listen for real-time updates to the impact entries collection
-db.collection('impact_entries').onSnapshot(snapshot => {
-  const entries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  renderImpactEntries(entries);
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    const userId = user.uid;
+    db.collection('impact_entries').where('userId', '==', userId).onSnapshot(snapshot => {
+      const entries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderImpactEntries(entries);
+
+      // Update the visibility of the impact table and "Add New Entry" button
+      const impactTable = document.querySelector('.impact-table');
+      const addEntryButton = document.querySelector('.btn-add');
+
+      impactTable.style.display = 'table'; // or 'block' depending on your table styling
+      addEntryButton.style.display = 'block'; // or 'inline-block' depending on your button styling
+    });
+  } else {
+    // User is not logged in, clear the impact entries
+    renderImpactEntries([]);
+  }
 });
+
+
 
 // Open impact modal
 document.addEventListener('DOMContentLoaded', () => {
