@@ -27,6 +27,14 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return Number(distance.toFixed(2)); // Return the distance as a number with 2 decimal places
 }
 
+const lat1 = 20.0157049; // Replace with a valid latitude value
+const lon1 = 57.5678122; // Replace with a valid longitude value
+const lat2 = -20.1020349; // Replace with another valid latitude value
+const lon2 = 57.5624505; // Replace with another valid longitude value
+
+const distance = calculateDistance(lat1, lon1, lat2, lon2);
+console.log("Distance:", distance); 
+
 
 
   function deg2rad(deg) {
@@ -35,8 +43,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 
 
 
-// Function to fetch the user's location from Firestore
-function getUserLocation() {
+  function getUserLocation() {
     return new Promise((resolve, reject) => {
       const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
         unsubscribe(); // Unsubscribe the listener once it's triggered
@@ -50,6 +57,8 @@ function getUserLocation() {
             .then((doc) => {
               if (doc.exists) {
                 const userData = doc.data();
+                console.log("Latitude:", userData.latitude);
+                console.log("Longitude:", userData.longitude);
                 resolve({ lat: userData.latitude, lng: userData.longitude });
               } else {
                 reject(new Error("User location not found."));
@@ -62,6 +71,7 @@ function getUserLocation() {
       });
     });
   }
+  
   
 
 // Function to fetch all opportunities from Firestore
@@ -105,9 +115,10 @@ function displayOpportunities(userLocation, opportunities) {
       const distance = calculateDistance(
         userLocation.lat,
         userLocation.lng,
-        opportunity.location.latitude,
-        opportunity.location.longitude
+        opportunity.latitude,
+        opportunity.longitude
       );
+      console.log(opportunity.latitude)
       distanceElement.textContent = `Distance: ${distance.toFixed(2)} km`; // Display the distance
       opportunityCard.appendChild(distanceElement);
   
@@ -127,16 +138,16 @@ function displayOpportunities(userLocation, opportunities) {
   // Function to sort the opportunities by distance from the user's location
   function sortOpportunitiesByDistance(userLocation, opportunities) {
     opportunities.sort((a, b) => {
-      const distanceA = calculateDistance(userLocation.lat, userLocation.lng, a.location.latitude, a.location.longitude);
-      const distanceB = calculateDistance(userLocation.lat, userLocation.lng, b.location.latitude, b.location.longitude);
+      const distanceA = calculateDistance(userLocation.lat, userLocation.lng, a.latitude, a.longitude);
+      const distanceB = calculateDistance(userLocation.lat, userLocation.lng, b.latitude, b.longitude);
       return distanceA - distanceB;
     });
     return opportunities;
   }
 
-  // Function to fetch user's location, opportunities, and display the sorted opportunities
 // Function to fetch user's location, opportunities, and display the sorted opportunities
 function fetchAndDisplayOpportunities() {
+    console.log('i dey work')
     let userLocation; // Declare userLocation variable here
   
     getUserLocation()
@@ -152,6 +163,9 @@ function fetchAndDisplayOpportunities() {
         console.error("Error fetching and displaying opportunities:", error);
       });
   }
+  
+  // Call the function to fetch and display opportunities when the page loads
+  window.addEventListener("DOMContentLoaded", fetchAndDisplayOpportunities);
   
 
   // Call the function to fetch and display opportunities when the page loads

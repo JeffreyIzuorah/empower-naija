@@ -79,6 +79,7 @@ function renderImpactEntries(entries) {
       deleteEntry(entryId);
     });
   });
+  renderImpactChart(entries);
 }
 
 // Handle form submission for adding/editing impact entries
@@ -196,5 +197,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+
+function renderImpactChart(entries) {
+  const chartLabels = entries.map(entry => entry.date.toDate().toLocaleDateString());
+  const chartData = entries.map(entry => entry.hours);
+
+  const ctx = document.getElementById('impact-chart').getContext('2d');
+  const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: chartLabels,
+      datasets: [{
+        label: 'Hours Volunteered',
+        data: chartData,
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
 
 

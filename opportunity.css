@@ -131,6 +131,10 @@ footer {
     text-decoration: none;
 }
 
+#location {
+    display: none;
+}
+
 /* Add this to your CSS styles */
 #map {
     height: 400px; /* Set a fixed height for the map container */
