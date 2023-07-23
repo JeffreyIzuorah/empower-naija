@@ -65,26 +65,7 @@ header {
     margin-top: 20px;
   }
   
-  /* Sidebar Styles */
-  .sidebar {
-    background-color: #f2f2f2;
-    width: 20%;
-    min-width: 200px;
-    padding: 20px;
-  }
-  
-  .sidebar-menu li {
-    margin-bottom: 10px;
-  }
-  
-  .sidebar-menu a {
-    color: #333;
-    text-decoration: none;
-  }
-  
-  .sidebar-menu .active {
-    font-weight: bold;
-  }
+
   
   /* Profile Section Styles */
   .profile-section {
