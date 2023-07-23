@@ -83,7 +83,8 @@ registerButton.addEventListener('click', async event => {
         name: name,
         location: '',
         skills: '',
-        bio: ''
+        bio: '',
+        userId: user.uid
       });
   
       displayFlashMessage('Registration successful', 'success');

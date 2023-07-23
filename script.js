@@ -80,6 +80,7 @@ function renderImpactEntries(entries) {
     });
   });
   renderImpactChart(entries);
+  renderLeaderboard(entries);
 }
 
 // Handle form submission for adding/editing impact entries
@@ -88,8 +89,8 @@ impactForm.addEventListener('submit', event => {
   event.preventDefault();
 
   const date = document.getElementById('date').value;
-  const hours = document.getElementById('hours').value;
-  const peopleHelped = document.getElementById('people-helped').value;
+  const hours = parseInt(document.getElementById('hours').value);
+  const peopleHelped = parseInt(document.getElementById('people-helped').value);
   const location = document.getElementById('location').value;
 
   // Check if it's an edit or add operation
@@ -97,6 +98,7 @@ impactForm.addEventListener('submit', event => {
 
   const user = firebase.auth().currentUser;
   const userId = user ? user.uid : null;
+  const name = user ? user.displayName : null;
 
   if (entryId) {
     // Update the existing entry in Firestore
@@ -124,7 +126,8 @@ impactForm.addEventListener('submit', event => {
       hours,
       peopleHelped,
       location,
-      userId // Add the user's ID to the impact entry document
+      userId, // Add the user's ID to the impact entry document
+      displayName: name // Add the user's name to the impact entry document
     })
       .then(() => {
         console.log('Entry added successfully');
@@ -158,6 +161,7 @@ firebase.auth().onAuthStateChanged(user => {
     db.collection('impact_entries').where('userId', '==', userId).onSnapshot(snapshot => {
       const entries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       renderImpactEntries(entries);
+      
 
       // Update the visibility of the impact table and "Add New Entry" button
       const impactTable = document.querySelector('.impact-table');
@@ -225,6 +229,47 @@ function renderImpactChart(entries) {
     }
   });
 }
+
+async function renderLeaderboard() {
+  try {
+    const usersSnapshot = await db.collection('users').get();
+    const usersData = {};
+
+    usersSnapshot.forEach(doc => {
+      const user = doc.data();
+      usersData[user.userId] = {
+        userId: user.userId,
+        displayName: user.name || 'Anonymous', // Use 'Anonymous' if displayName is not available
+        hours: 0
+      };
+    });
+
+    // Fetch all impact entries
+    const impactSnapshot = await db.collection('impact_entries').get();
+    impactSnapshot.forEach(doc => {
+      const entry = doc.data();
+      if (entry.userId in usersData) {
+        usersData[entry.userId].hours += entry.hours;
+      }
+    });
+
+    const sortedUsers = Object.values(usersData).sort((a, b) => b.hours - a.hours);
+
+    const leaderboardList = document.querySelector('.leaderboard-list');
+    leaderboardList.innerHTML = '';
+
+    sortedUsers.forEach((user, index) => {
+      const listItem = document.createElement('li');
+      listItem.textContent = `${index + 1}. ${user.displayName} - ${user.hours} hours`;
+      leaderboardList.appendChild(listItem);
+    });
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+  }
+}
+
+
+
 
 
 
