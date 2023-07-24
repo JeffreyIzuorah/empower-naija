@@ -11,6 +11,10 @@ const firebaseConfig = {
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
   const auth = firebase.auth();
+
+// Add this at the top of messages.js
+let selectedReceiverId = null;
+
   
 // Get references to UI elements
 const searchInput = document.getElementById('search-input');
@@ -52,10 +56,7 @@ searchBtn.addEventListener('click', () => {
   });
   
 
-// Function to load chat history
-function loadChatHistory(senderId, receiverId) {
-    console.log('Sender ID:', senderId);
-    console.log('Receiver ID:', receiverId);
+  function loadChatHistory(senderId, receiverId) {
     // Clear the chat history
     chatHeader.textContent = ''; // Clear the chat header
     chatHistory.innerHTML = ''; // Clear the chat history
@@ -72,48 +73,61 @@ function loadChatHistory(senderId, receiverId) {
         console.error('Error getting user data:', error);
       });
   
-    // Query the messages collection to get the chat history
-    const sentMessagesQuery = db
-      .collection('messages')
+    // Query for messages sent by the current user (sender)
+    const sentMessagesQuery = db.collection('messages')
       .where('senderId', '==', senderId)
-      .where('receiverId', '==', receiverId);
+      .where('receiverId', '==', receiverId)
+      .orderBy('timestamp', 'asc');
   
-    const receivedMessagesQuery = db
-      .collection('messages')
+    // Query for messages received by the current user (receiver)
+    const receivedMessagesQuery = db.collection('messages')
       .where('senderId', '==', receiverId)
-      .where('receiverId', '==', senderId);
+      .where('receiverId', '==', senderId)
+      .orderBy('timestamp', 'asc');
   
-    // Combine both queries into one query using Promise.all
-    Promise.all([sentMessagesQuery.get(), receivedMessagesQuery.get()])
-      .then((querySnapshots) => {
-        // Combine and sort the query results
-        const querySnapshot = querySnapshots.reduce(
-          (result, snapshot) => result.concat(snapshot.docs),
-          []
-        );
+    // Listen for real-time updates on new messages sent by the sender
+    sentMessagesQuery.onSnapshot(snapshot => {
+      chatHistory.innerHTML = ''; // Clear the chat history
   
-        querySnapshot.sort(
-          (a, b) =>
-            a.data().timestamp.toMillis() - b.data().timestamp.toMillis()
-        );
-  
-        // Add each message to the chat history
-        querySnapshot.forEach((doc) => {
-          const message = doc.data();
-          const messageElement = document.createElement('div');
-          messageElement.className = 'message';
-          messageElement.textContent = message.content;
-          chatHistory.appendChild(messageElement);
-        });
-  
-        // Scroll to the bottom of the chat history
-        chatHistory.scrollTop = chatHistory.scrollHeight;
-      })
-      .catch((error) => {
-        console.error('Error loading chat history:', error);
+      snapshot.docs.forEach(doc => {
+        const message = doc.data();
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message';
+        messageElement.textContent = message.content;
+        chatHistory.appendChild(messageElement);
       });
-      
+  
+      // Scroll to the bottom of the chat history
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+    });
+  
+    // Listen for real-time updates on new messages received by the receiver
+    receivedMessagesQuery.onSnapshot(snapshot => {
+      snapshot.docs.forEach(doc => {
+        const message = doc.data();
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message';
+        messageElement.textContent = message.content;
+        chatHistory.appendChild(messageElement);
+      });
+  
+      // Scroll to the bottom of the chat history
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+    });
+
+    db.collection('users')
+    .doc(receiverId)
+    .update({
+      contacts: firebase.firestore.FieldValue.arrayUnion(senderId)
+    })
+    .then(() => {
+      console.log('Sender added to the contact list');
+    })
+    .catch((error) => {
+      console.error('Error adding sender to the contact list:', error);
+    });
   }
+  
 
 
 function onContactClick(clickedElement) {
@@ -126,10 +140,11 @@ function onContactClick(clickedElement) {
 
   // Get the sender and receiver IDs
   const senderId = user.uid;
-  const receiverId = clickedElement.dataset.userId; // Extract the receiverId from the data attribute
+  selectedReceiverId = clickedElement.dataset.userId; // Extract the receiverId from the data attribute
+
 
   // Load the chat history for the selected user
-  loadChatHistory(senderId, receiverId);
+  loadChatHistory(senderId, selectedReceiverId);
 }
   
 // Event listener for contact list items
@@ -139,6 +154,44 @@ contactList.addEventListener('click', (event) => {
       onContactClick(clickedElement); // Pass the clicked contact element to the function
     }
   });
+
+  sendButton.addEventListener('click', () => {
+    const messageContent = messageInput.value.trim();
+    if (messageContent !== '') {
+      const senderId = auth.currentUser.uid;
+      const receiverId = selectedReceiverId // The receiver's display name is stored in chatHeader.textContent
+      const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+  
+      // Create a new message document in Firestore
+      db.collection('messages').add({
+        senderId,
+        receiverId,
+        content: messageContent,
+        timestamp,
+      })
+      .then(() => {
+        console.log('Message sent successfully');
+        messageInput.value = ''; // Clear the input field after sending the message
+      })
+      .catch(error => {
+        console.error('Error sending message:', error);
+      });
+    }
+     // After successfully sending the message
+  db.collection('users')
+  .doc(senderId)
+  .update({
+    contacts: firebase.firestore.FieldValue.arrayUnion(receiverId)
+  })
+  .then(() => {
+    console.log('Receiver added to the contact list');
+    messageInput.value = ''; // Clear the input field after sending the message
+  })
+  .catch((error) => {
+    console.error('Error adding receiver to the contact list:', error);
+  });
+  });
+  
   
 
   

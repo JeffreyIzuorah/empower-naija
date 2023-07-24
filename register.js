@@ -84,7 +84,8 @@ registerButton.addEventListener('click', async event => {
         location: '',
         skills: '',
         bio: '',
-        userId: user.uid
+        userId: user.uid,
+        contacts: [] // Initialize the contacts field as an empty array
       });
   
       displayFlashMessage('Registration successful', 'success');
