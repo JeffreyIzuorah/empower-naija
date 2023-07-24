@@ -15,6 +15,18 @@ const firebaseConfig = {
 // Add this at the top of messages.js
 let selectedReceiverId = null;
 
+// At the top of messages.js (before other event listeners)
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      // Call the loadContacts function only when the user is logged in
+      loadContacts();
+    } else {
+      // Handle the case when the user is not logged in
+      console.error('User not logged in.');
+    }
+  });
+  
+
   
 // Get references to UI elements
 const searchInput = document.getElementById('search-input');
@@ -73,17 +85,17 @@ searchBtn.addEventListener('click', () => {
         console.error('Error getting user data:', error);
       });
   
-    // Query for messages sent by the current user (sender)
-    const sentMessagesQuery = db.collection('messages')
-      .where('senderId', '==', senderId)
-      .where('receiverId', '==', receiverId)
-      .orderBy('timestamp', 'asc');
-  
-    // Query for messages received by the current user (receiver)
-    const receivedMessagesQuery = db.collection('messages')
-      .where('senderId', '==', receiverId)
-      .where('receiverId', '==', senderId)
-      .orderBy('timestamp', 'asc');
+  // Query for messages sent by the current user (sender)
+  const sentMessagesQuery = db.collection('messages')
+    .where('senderId', '==', senderId)
+    .where('receiverId', '==', receiverId)
+    .orderBy('timestamp', 'asc');
+
+  // Query for messages received by the current user (receiver)
+  const receivedMessagesQuery = db.collection('messages')
+    .where('senderId', '==', receiverId)
+    .where('receiverId', '==', senderId)
+    .orderBy('timestamp', 'asc');
   
     // Listen for real-time updates on new messages sent by the sender
     sentMessagesQuery.onSnapshot(snapshot => {
@@ -115,7 +127,8 @@ searchBtn.addEventListener('click', () => {
       chatHistory.scrollTop = chatHistory.scrollHeight;
     });
 
-    db.collection('users')
+  // Update receiver's contact list with the sender's ID
+  db.collection('users')
     .doc(receiverId)
     .update({
       contacts: firebase.firestore.FieldValue.arrayUnion(senderId)
@@ -172,12 +185,8 @@ contactList.addEventListener('click', (event) => {
       .then(() => {
         console.log('Message sent successfully');
         messageInput.value = ''; // Clear the input field after sending the message
-      })
-      .catch(error => {
-        console.error('Error sending message:', error);
-      });
-    }
-     // After successfully sending the message
+
+            // After successfully sending the message
   db.collection('users')
   .doc(senderId)
   .update({
@@ -190,8 +199,68 @@ contactList.addEventListener('click', (event) => {
   .catch((error) => {
     console.error('Error adding receiver to the contact list:', error);
   });
+        // Update receiver's contact list with the sender's ID
+        db.collection('users')
+        .doc(receiverId)
+        .update({
+          contacts: firebase.firestore.FieldValue.arrayUnion(senderId)
+        })
+        .then(() => {
+          console.log('Sender added to the receiver\'s contact list');
+        })
+        .catch((error) => {
+          console.error('Error adding sender to the receiver\'s contact list:', error);
+        });
+      })
+      .catch(error => {
+        console.error('Error sending message:', error);
+      });
+    }
+ 
   });
   
+  function loadContacts() {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+      console.error('User not logged in.');
+      return;
+    }
+  
+    const userId = user.uid;
+  
+    // Fetch the user document of the logged-in user
+    db.collection('users')
+      .doc(userId)
+      .get()
+      .then((doc) => {
+        const user = doc.data();
+        const contacts = user.contacts || []; // Get the contacts array, or use an empty array if it's undefined
+  
+        // Clear the contact list
+        contactList.innerHTML = '';
+  
+        // Add each contact to the contact list
+        contacts.forEach((contactId) => {
+          db.collection('users')
+            .doc(contactId)
+            .get()
+            .then((contactDoc) => {
+              const contact = contactDoc.data();
+              const contactElement = document.createElement('li');
+              contactElement.className = 'contact';
+              contactElement.textContent = contact.name;
+              contactElement.setAttribute('data-user-id', contactId);
+              contactList.appendChild(contactElement);
+            })
+            .catch((error) => {
+              console.error('Error loading contact:', error);
+            });
+        });
+      })
+      .catch((error) => {
+        console.error('Error loading user data:', error);
+      });
+  }
   
 
   
