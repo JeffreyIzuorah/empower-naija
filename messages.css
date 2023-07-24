@@ -135,3 +135,41 @@ nav {
 .message.unread {
     font-weight: bold;
 }
+
+.chat-history {
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  .message-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+  }
+  
+  .message {
+    max-width: 70%;
+    padding: 8px;
+    border-radius: 8px;
+  }
+  
+  .sender-message {
+    align-self: flex-end;
+    background-color: #007bff;
+    color: #fff;
+    width: 30%;
+    padding: 8px;
+    margin-left: 700px;
+  }
+  
+  .receiver-message {
+    align-self: flex-start;
+    background-color: #f0f0f0;
+    width: 30%;
+  }
+  
+  /* Add some spacing for the chat header */
+  .chat-header {
+    margin-bottom: 16px;
+  }

@@ -85,63 +85,61 @@ searchBtn.addEventListener('click', () => {
         console.error('Error getting user data:', error);
       });
   
-  // Query for messages sent by the current user (sender)
-  const sentMessagesQuery = db.collection('messages')
-    .where('senderId', '==', senderId)
-    .where('receiverId', '==', receiverId)
-    .orderBy('timestamp', 'asc');
-
-  // Query for messages received by the current user (receiver)
-  const receivedMessagesQuery = db.collection('messages')
-    .where('senderId', '==', receiverId)
-    .where('receiverId', '==', senderId)
-    .orderBy('timestamp', 'asc');
+    // Query for messages sent by the current user (sender)
+    const sentMessagesQuery = db
+      .collection('messages')
+      .where('senderId', '==', senderId)
+      .where('receiverId', '==', receiverId);
   
-    // Listen for real-time updates on new messages sent by the sender
-    sentMessagesQuery.onSnapshot(snapshot => {
-      chatHistory.innerHTML = ''; // Clear the chat history
+    // Query for messages received by the current user (receiver)
+    const receivedMessagesQuery = db
+      .collection('messages')
+      .where('senderId', '==', receiverId)
+      .where('receiverId', '==', senderId);
   
-      snapshot.docs.forEach(doc => {
-        const message = doc.data();
-        const messageElement = document.createElement('div');
-        messageElement.className = 'message';
-        messageElement.textContent = message.content;
-        chatHistory.appendChild(messageElement);
+    // Combine both queries into one query using Promise.all
+    Promise.all([sentMessagesQuery.get(), receivedMessagesQuery.get()])
+      .then((querySnapshots) => {
+        // Combine and sort the query results
+        const querySnapshot = querySnapshots.reduce(
+          (result, snapshot) => result.concat(snapshot.docs),
+          []
+        );
+  
+        querySnapshot.sort(
+          (a, b) => a.data().timestamp.toMillis() - b.data().timestamp.toMillis()
+        );
+  
+        // Add each message to the chat history
+        querySnapshot.forEach((doc) => {
+          const message = doc.data();
+          const messageElement = document.createElement('div');
+          messageElement.className = `message ${message.senderId === senderId ? 'sender-message' : 'receiver-message'}`;
+          messageElement.innerHTML = `<p>${message.content}</p>`;
+          chatHistory.appendChild(messageElement);
+        });
+  
+        // Scroll to the bottom of the chat history
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+      })
+      .catch((error) => {
+        console.error('Error loading chat history:', error);
       });
   
-      // Scroll to the bottom of the chat history
-      chatHistory.scrollTop = chatHistory.scrollHeight;
-    });
-  
-    // Listen for real-time updates on new messages received by the receiver
-    receivedMessagesQuery.onSnapshot(snapshot => {
-      snapshot.docs.forEach(doc => {
-        const message = doc.data();
-        const messageElement = document.createElement('div');
-        messageElement.className = 'message';
-        messageElement.textContent = message.content;
-        chatHistory.appendChild(messageElement);
+    // Update receiver's contact list with the sender's ID
+    db.collection('users')
+      .doc(receiverId)
+      .update({
+        contacts: firebase.firestore.FieldValue.arrayUnion(senderId)
+      })
+      .then(() => {
+        console.log('Sender added to the contact list');
+      })
+      .catch((error) => {
+        console.error('Error adding sender to the contact list:', error);
       });
-  
-      // Scroll to the bottom of the chat history
-      chatHistory.scrollTop = chatHistory.scrollHeight;
-    });
-
-  // Update receiver's contact list with the sender's ID
-  db.collection('users')
-    .doc(receiverId)
-    .update({
-      contacts: firebase.firestore.FieldValue.arrayUnion(senderId)
-    })
-    .then(() => {
-      console.log('Sender added to the contact list');
-    })
-    .catch((error) => {
-      console.error('Error adding sender to the contact list:', error);
-    });
   }
   
-
 
 function onContactClick(clickedElement) {
   // Get the current logged-in user
