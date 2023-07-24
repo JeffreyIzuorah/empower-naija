@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Jeffreywastaken/emporwer-naija#readme",
   "dependencies": {
+    "bootstrap": "^5.3.0",
     "firebase": "^8.6.8"
   }
 }
