@@ -181,21 +181,29 @@ function loadChatHistory(senderId, receiverId) {
 
 
 function onContactClick(clickedElement) {
-  // Get the current logged-in user
-  const user = firebase.auth().currentUser;
-  if (!user) {
-    console.error('User not logged in.');
-    return;
+    // Get the current logged-in user
+    const user = firebase.auth().currentUser;
+    if (!user) {
+      console.error('User not logged in.');
+      return;
+    }
+  
+    // Get the sender and receiver IDs
+    const senderId = user.uid;
+    const newReceiverId = clickedElement.dataset.userId; // Extract the receiverId from the data attribute
+  
+    // Check if the selected user is the current chat partner
+    if (selectedReceiverId === newReceiverId) {
+      return; // Skip loading chat history if the selected user is already the current chat partner
+    }
+  
+    // Update the selectedReceiverId to the new selected user
+    selectedReceiverId = newReceiverId;
+  
+    // Load the chat history for the selected user
+    loadChatHistory(senderId, selectedReceiverId);
   }
-
-  // Get the sender and receiver IDs
-  const senderId = user.uid;
-  selectedReceiverId = clickedElement.dataset.userId; // Extract the receiverId from the data attribute
-
-
-  // Load the chat history for the selected user
-  loadChatHistory(senderId, selectedReceiverId);
-}
+  
   
 // Event listener for contact list items
 contactList.addEventListener('click', (event) => {
