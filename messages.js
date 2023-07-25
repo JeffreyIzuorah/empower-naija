@@ -66,6 +66,7 @@ searchBtn.addEventListener('click', () => {
         console.error('Error searching for users:', error);
       });
   });
+ 
   
 
   function loadChatHistory(senderId, receiverId) {
@@ -170,52 +171,49 @@ contactList.addEventListener('click', (event) => {
     const messageContent = messageInput.value.trim();
     if (messageContent !== '') {
       const senderId = auth.currentUser.uid;
-      const receiverId = selectedReceiverId // The receiver's display name is stored in chatHeader.textContent
+      const receiverId = selectedReceiverId;
       const timestamp = firebase.firestore.FieldValue.serverTimestamp();
   
       // Create a new message document in Firestore
-      db.collection('messages').add({
-        senderId,
-        receiverId,
-        content: messageContent,
-        timestamp,
-      })
-      .then(() => {
-        console.log('Message sent successfully');
-        messageInput.value = ''; // Clear the input field after sending the message
-
-            // After successfully sending the message
-  db.collection('users')
-  .doc(senderId)
-  .update({
-    contacts: firebase.firestore.FieldValue.arrayUnion(receiverId)
-  })
-  .then(() => {
-    console.log('Receiver added to the contact list');
-    messageInput.value = ''; // Clear the input field after sending the message
-  })
-  .catch((error) => {
-    console.error('Error adding receiver to the contact list:', error);
-  });
-        // Update receiver's contact list with the sender's ID
-        db.collection('users')
-        .doc(receiverId)
-        .update({
-          contacts: firebase.firestore.FieldValue.arrayUnion(senderId)
+      db.collection('messages')
+        .add({
+          senderId,
+          receiverId,
+          content: messageContent,
+          timestamp,
         })
         .then(() => {
-          console.log('Sender added to the receiver\'s contact list');
+          console.log('Message sent successfully');
+          messageInput.value = ''; // Clear the input field after sending the message
+  
+          // After successfully sending the message, directly add it to the chat history
+          const messageElement = document.createElement('div');
+          messageElement.className = `message sender-message`;
+          messageElement.innerHTML = `<p>${messageContent}</p>`;
+          chatHistory.appendChild(messageElement);
+  
+          // Scroll to the bottom of the chat history
+          chatHistory.scrollTop = chatHistory.scrollHeight;
+  
+          // Update receiver's contact list with the sender's ID
+          db.collection('users')
+            .doc(receiverId)
+            .update({
+              contacts: firebase.firestore.FieldValue.arrayUnion(senderId)
+            })
+            .then(() => {
+              console.log('Sender added to the contact list');
+            })
+            .catch((error) => {
+              console.error('Error adding sender to the contact list:', error);
+            });
         })
         .catch((error) => {
-          console.error('Error adding sender to the receiver\'s contact list:', error);
+          console.error('Error sending message:', error);
         });
-      })
-      .catch(error => {
-        console.error('Error sending message:', error);
-      });
     }
- 
   });
+  
   
   function loadContacts() {
     const user = firebase.auth().currentUser;
