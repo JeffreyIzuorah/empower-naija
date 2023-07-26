@@ -61,6 +61,7 @@ header {
   /* Main Container Styles */
   .main-container {
     margin-top: 80px;
+    /* display: flex; */
   }
   
   /* Opportunities Section Styles */
@@ -208,6 +209,43 @@ header {
     cursor: pointer;
     z-index: 9999;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
+
+  /* New Styles for Sidebar */
+.dashboard-container {
+    display: flex;
+  }
+  
+  .sidebar {
+    width: 200px;
+    background-color: #f2f2f2;
+    padding-top: 20px;
+    /* margin-top: 60px; */
+    position: fixed;
+  }
+  
+  .sidebar-menu {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar-menu li {
+    margin-bottom: 10px;
+  }
+  
+  .sidebar-menu li a {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-left: 5px solid transparent;
+    transition: background-color 0.3s;
+  }
+  
+  .sidebar-menu li a:hover {
+    background-color: #e0e0e0;
+    border-left: 5px solid #333;
   }
   
   
