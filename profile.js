@@ -91,6 +91,28 @@ cancelButton.addEventListener('click', () => {
 // const locationInput = document.getElementById('location');
 
 // Function to get the user's current location and save it to Firestore
+
+function getLocationName(lat, lng) {
+    return new Promise((resolve, reject) => {
+      const geocoder = new google.maps.Geocoder();
+      const latlng = { lat: parseFloat(lat), lng: parseFloat(lng) };
+  
+      geocoder.geocode({ location: latlng }, (results, status) => {
+        if (status === "OK") {
+          if (results[0]) {
+            resolve(results[0].formatted_address);
+          } else {
+            reject(new Error("Location not found"));
+          }
+        } else {
+          reject(new Error("Geocoder failed due to: " + status));
+        }
+      });
+    });
+  }
+
+
+// Modify the getCurrentLocation function to call the getLocationName function
 function getCurrentLocation() {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -106,6 +128,8 @@ function getCurrentLocation() {
           })
           .then(() => {
             console.log('User location updated successfully');
+            // Get the location name based on latitude and longitude and set the location input field
+            getLocationName(latitude, longitude);
           })
           .catch(error => {
             console.error('Error updating user location:', error);
