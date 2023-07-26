@@ -167,13 +167,32 @@ function handleVolunteerAction(userLocation, opportunity) {
         })
         .then(() => {
           console.log("Volunteer successful.");
+
+          const flashMessage = createFlashMessage("You have volunteered for this opportunity!");
+          document.body.appendChild(flashMessage);
+          // Optionally, you can refresh the opportunities data without reloading the whole page
+          // For example, by calling the fetchAndDisplayOpportunities function again
+          fetchAndDisplayOpportunities();
           // Refresh the opportunity details in the modal to update the volunteers count and "Withdraw" button display
-          displayOpportunityDetails(userLocation, opportunity);
+          
         })
         .catch((error) => {
           console.error("Error volunteering:", error);
         });
     }
+  }
+
+  function createFlashMessage(message) {
+    const flashMessage = document.createElement("div");
+    flashMessage.classList.add("flash-message");
+    flashMessage.textContent = message;
+  
+    // Add an event listener to remove the flash message when clicked
+    flashMessage.addEventListener("click", () => {
+      flashMessage.remove();
+    });
+  
+    return flashMessage;
   }
 
   // Function to get the names of volunteers based on their IDs
@@ -355,8 +374,11 @@ function handleWithdrawAction(userLocation, opportunity) {
         })
         .then(() => {
           console.log("Volunteer withdrawal successful.");
+
+          const flashMessage = createFlashMessage("You have withdrawn from this opportunity!");
+          document.body.appendChild(flashMessage);
           // Refresh the opportunity details in the modal to update the volunteers count
-          displayOpportunityDetails(userLocation, opportunity);
+          fetchAndDisplayOpportunities();
         })
         .catch((error) => {
           console.error("Error withdrawing volunteer:", error);
