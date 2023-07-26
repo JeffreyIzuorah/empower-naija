@@ -148,8 +148,6 @@ function displayOpportunities(userLocation, opportunities) {
     });
   }
   
- // Function to handle the volunteer action when the Volunteer button is clicked
-// Function to handle the volunteer action when the Volunteer button is clicked
 // Function to handle the volunteer action when the "Volunteer" button is clicked
 function handleVolunteerAction(userLocation, opportunity) {
     const userId = firebase.auth().currentUser.uid;
@@ -168,7 +166,7 @@ function handleVolunteerAction(userLocation, opportunity) {
         .then(() => {
           console.log("Volunteer successful.");
 
-          const flashMessage = createFlashMessage("You have volunteered for this opportunity!");
+          const flashMessage = createFlashMessage("You have volunteered for this opportunity!", "flash-message");
           document.body.appendChild(flashMessage);
           // Optionally, you can refresh the opportunities data without reloading the whole page
           // For example, by calling the fetchAndDisplayOpportunities function again
@@ -182,9 +180,9 @@ function handleVolunteerAction(userLocation, opportunity) {
     }
   }
 
-  function createFlashMessage(message) {
+  function createFlashMessage(message, className) {
     const flashMessage = document.createElement("div");
-    flashMessage.classList.add("flash-message");
+    flashMessage.classList.add(className);
     flashMessage.textContent = message;
   
     // Add an event listener to remove the flash message when clicked
@@ -375,7 +373,7 @@ function handleWithdrawAction(userLocation, opportunity) {
         .then(() => {
           console.log("Volunteer withdrawal successful.");
 
-          const flashMessage = createFlashMessage("You have withdrawn from this opportunity!");
+          const flashMessage = createFlashMessage("You have withdrawn from this opportunity!", "flash-message-withdraw");
           document.body.appendChild(flashMessage);
           // Refresh the opportunity details in the modal to update the volunteers count
           fetchAndDisplayOpportunities();

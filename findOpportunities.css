@@ -192,4 +192,22 @@ header {
     z-index: 9999;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   }
+
+  /* Flash message for volunteer action */
+  
+/* CSS for the withdrawal flash message */
+.flash-message-withdraw {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f44336;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 9999;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
   
