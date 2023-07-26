@@ -99,10 +99,10 @@ function displayOpportunities(userLocation, opportunities) {
       opportunityCard.classList.add("location");
 
           // Add an event listener for the opportunity card
-    opportunityCard.addEventListener("click", () => {
-        // Call the function to display the full opportunity details
-        displayOpportunityDetails(userLocation, opportunity);
-      });
+    // opportunityCard.addEventListener("click", () => {
+    //     // Call the function to display the full opportunity details
+    //     displayOpportunityDetails(userLocation, opportunity);
+    //   });
   
       const locationElement = document.createElement("h3");
       locationElement.textContent = opportunity.locationName; // Display the opportunity's location name
@@ -132,6 +132,7 @@ function displayOpportunities(userLocation, opportunities) {
     volunteerButton.addEventListener("click", () => {
         // Call a function to handle the volunteer action
         // handleVolunteerAction(opportunity);
+        displayOpportunityDetails(userLocation, opportunity);
       });
   
       opportunitiesContainer.appendChild(opportunityCard);
@@ -139,10 +140,39 @@ function displayOpportunities(userLocation, opportunities) {
   }
   
  // Function to handle the volunteer action when the Volunteer button is clicked
-function handleVolunteerAction(opportunity) {
+// Function to handle the volunteer action when the Volunteer button is clicked
+function handleVolunteerAction(userLocation, opportunity) {
     // Perform any action you want when the Volunteer button is clicked
     // For example, you can show a message to indicate successful volunteering
-    alert(`You have volunteered for the opportunity at ${opportunity.locationName}`);
+    // alert(`You have volunteered for the opportunity at ${opportunity.locationName}`);
+    
+    // Add the user's ID to the opportunity's volunteers field
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        const userId = user.uid;
+        
+        // Check if the user has already volunteered for this opportunity
+        if (!opportunity.volunteers.includes(userId)) {
+          opportunity.volunteers.push(userId);
+          
+          // Update the opportunity in Firestore with the new volunteers list
+          db.collection("opportunities")
+            .doc(opportunity.id)
+            .update({ volunteers: opportunity.volunteers })
+            .then(() => {
+              // Show a success message or any other action you want
+              alert("You have successfully volunteered for this opportunity!");
+            })
+            .catch((error) => {
+              console.error("Error updating opportunity:", error);
+              // Show an error message or handle the error appropriately
+            });
+        } else {
+          // Show a message indicating that the user has already volunteered for this opportunity
+          alert("You have already volunteered for this opportunity.");
+        }
+      }
+    });
   }
   
 
@@ -182,6 +212,22 @@ function displayOpportunityDetails(userLocation, opportunity) {
     const descriptionElement = opportunityModal.querySelector(".opportunity-description");
     const distanceElement = opportunityModal.querySelector(".opportunity-distance");
     const volunteersElement = opportunityModal.querySelector(".opportunity-volunteers");
+    const confirmButton = opportunityModal.querySelector(".confirm-btn");
+    const cancelButton = opportunityModal.querySelector(".cancel-btn");
+
+      // Add an event listener for the Confirm button
+  confirmButton.addEventListener("click", () => {
+    // Call the function to handle the volunteer action
+    handleVolunteerAction(userLocation, opportunity);
+    // Close the opportunity modal after handling the volunteer action
+    opportunityModal.style.display = "none";
+  });
+
+  // Add an event listener for the Cancel button
+  cancelButton.addEventListener("click", () => {
+    // Close the opportunity modal without any further action
+    opportunityModal.style.display = "none";
+  });
   
     // Set the content of the opportunity details elements
     locationElement.textContent = opportunity.locationName;
