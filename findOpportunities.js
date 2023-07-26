@@ -254,8 +254,8 @@ function displayOpportunityDetails(userLocation, opportunity) {
     const descriptionElement = opportunityModal.querySelector(".opportunity-description");
     const distanceElement = opportunityModal.querySelector(".opportunity-distance");
     const volunteersElement = opportunityModal.querySelector(".opportunity-volunteers");
-    const confirmButton = opportunityModal.querySelector(".confirm-btn");
-    const cancelButton = opportunityModal.querySelector(".cancel-btn");
+    const confirmButton = opportunityModal.querySelector(".btn-success");
+    const cancelButton = opportunityModal.querySelector(".btn-danger");
     const withdrawButton = opportunityModal.querySelector(".withdraw-btn");
 
       // Check if the user has volunteered for this opportunity
