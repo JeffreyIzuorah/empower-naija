@@ -47,6 +47,16 @@ const firebaseConfig = {
           <td class="name">${user.displayName}</td>
           <td class="points">${user.points}</td>
         `;
+  
+        if (index === 0) {
+          // Add gold medal image for the top-ranked person
+          const goldMedalImg = document.createElement('img');
+          goldMedalImg.src = "https://github.com/malunaridev/Challenges-iCodeThis/blob/master/4-leaderboard/assets/gold-medal.png?raw=true";
+          goldMedalImg.alt = "gold medal";
+          goldMedalImg.classList.add("gold-medal");
+          row.querySelector('.number').appendChild(goldMedalImg);
+        }
+  
         leaderboardList.appendChild(row);
       });
     } catch (error) {
