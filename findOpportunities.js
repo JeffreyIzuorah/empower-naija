@@ -141,38 +141,54 @@ function displayOpportunities(userLocation, opportunities) {
   
  // Function to handle the volunteer action when the Volunteer button is clicked
 // Function to handle the volunteer action when the Volunteer button is clicked
+// Function to handle the volunteer action when the "Volunteer" button is clicked
 function handleVolunteerAction(userLocation, opportunity) {
-    // Perform any action you want when the Volunteer button is clicked
-    // For example, you can show a message to indicate successful volunteering
-    // alert(`You have volunteered for the opportunity at ${opportunity.locationName}`);
-    
-    // Add the user's ID to the opportunity's volunteers field
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        const userId = user.uid;
-        
-        // Check if the user has already volunteered for this opportunity
-        if (!opportunity.volunteers.includes(userId)) {
-          opportunity.volunteers.push(userId);
-          
-          // Update the opportunity in Firestore with the new volunteers list
-          db.collection("opportunities")
-            .doc(opportunity.id)
-            .update({ volunteers: opportunity.volunteers })
-            .then(() => {
-              // Show a success message or any other action you want
-              alert("You have successfully volunteered for this opportunity!");
-            })
-            .catch((error) => {
-              console.error("Error updating opportunity:", error);
-              // Show an error message or handle the error appropriately
-            });
-        } else {
-          // Show a message indicating that the user has already volunteered for this opportunity
-          alert("You have already volunteered for this opportunity.");
-        }
-      }
+    const userId = firebase.auth().currentUser.uid;
+  
+    // Check if the user has not already volunteered for this opportunity
+    if (!hasVolunteeredForOpportunity(opportunity, userId)) {
+      // Add the user to the volunteers list
+      opportunity.volunteers.push(userId);
+  
+      // Update the opportunity in the Firestore database with the new volunteers list
+      db.collection("opportunities")
+        .doc(opportunity.id)
+        .update({
+          volunteers: opportunity.volunteers,
+        })
+        .then(() => {
+          console.log("Volunteer successful.");
+          // Refresh the opportunity details in the modal to update the volunteers count and "Withdraw" button display
+          displayOpportunityDetails(userLocation, opportunity);
+        })
+        .catch((error) => {
+          console.error("Error volunteering:", error);
+        });
+    }
+  }
+
+  // Function to get the names of volunteers based on their IDs
+function getVolunteersNames(volunteerIds) {
+    const volunteersPromises = volunteerIds.map((volunteerId) => {
+      return db
+        .collection("users")
+        .doc(volunteerId)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            const volunteerData = doc.data();
+            return volunteerData.name; // Assuming the user's display name is stored in the 'displayName' field
+          } else {
+            return "Unknown Volunteer"; // If the user document doesn't exist or displayName is not available
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching volunteer data:", error);
+          return "Unknown Volunteer"; // If there's an error fetching the user data
+        });
     });
+  
+    return Promise.all(volunteersPromises);
   }
   
 
@@ -214,6 +230,18 @@ function displayOpportunityDetails(userLocation, opportunity) {
     const volunteersElement = opportunityModal.querySelector(".opportunity-volunteers");
     const confirmButton = opportunityModal.querySelector(".confirm-btn");
     const cancelButton = opportunityModal.querySelector(".cancel-btn");
+    const withdrawButton = opportunityModal.querySelector(".withdraw-btn");
+
+      // Check if the user has volunteered for this opportunity
+  const userId = firebase.auth().currentUser.uid;
+  const userHasVolunteered = hasVolunteeredForOpportunity(opportunity, userId);
+
+    // Display the 'Withdraw' button if the user has volunteered for this opportunity
+    if (userHasVolunteered) {
+        withdrawButton.style.display = "block";
+      } else {
+        withdrawButton.style.display = "none";
+      }
 
       // Add an event listener for the Confirm button
   confirmButton.addEventListener("click", () => {
@@ -223,11 +251,30 @@ function displayOpportunityDetails(userLocation, opportunity) {
     opportunityModal.style.display = "none";
   });
 
+    // Add an event listener for the Withdraw button
+    withdrawButton.addEventListener("click", () => {
+        // Call the function to handle the volunteer withdrawal action
+        handleWithdrawAction(userLocation, opportunity);
+        // Close the opportunity modal after handling the withdrawal action
+        opportunityModal.style.display = "none";
+      });
+
   // Add an event listener for the Cancel button
   cancelButton.addEventListener("click", () => {
     // Close the opportunity modal without any further action
     opportunityModal.style.display = "none";
   });
+
+    // Fetch the names of volunteers and display them in the modal
+    getVolunteersNames(opportunity.volunteers)
+    .then((volunteersNames) => {
+      const volunteersList = volunteersNames.join(", ");
+      volunteersElement.textContent = ` ${volunteersList}`;
+    })
+    .catch((error) => {
+      console.error("Error fetching volunteers names:", error);
+      volunteersElement.textContent = " Unknown";
+    });
   
     // Set the content of the opportunity details elements
     locationElement.textContent = opportunity.locationName;
@@ -274,4 +321,36 @@ document.getElementById("opportunityModal").addEventListener("click", (event) =>
         }
       });
     });
+  }
+
+  // Function to check if the user has volunteered for an opportunity
+function hasVolunteeredForOpportunity(opportunity, userId) {
+    return opportunity.volunteers.includes(userId);
+  }
+
+
+// Function to handle the volunteer withdrawal action when the "Withdraw" button is clicked
+function handleWithdrawAction(userLocation, opportunity) {
+    const userId = firebase.auth().currentUser.uid;
+  
+    // Check if the user has volunteered for this opportunity
+    if (hasVolunteeredForOpportunity(opportunity, userId)) {
+      // Remove the user from the volunteers list
+      const updatedVolunteers = opportunity.volunteers.filter((volunteerId) => volunteerId !== userId);
+  
+      // Update the opportunity in the Firestore database with the new volunteers list
+      db.collection("opportunities")
+        .doc(opportunity.id)
+        .update({
+          volunteers: updatedVolunteers,
+        })
+        .then(() => {
+          console.log("Volunteer withdrawal successful.");
+          // Refresh the opportunity details in the modal to update the volunteers count
+          displayOpportunityDetails(userLocation, opportunity);
+        })
+        .catch((error) => {
+          console.error("Error withdrawing volunteer:", error);
+        });
+    }
   }
