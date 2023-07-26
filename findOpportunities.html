@@ -50,6 +50,16 @@
             <button class="btn">Volunteer</button>
           </div>
         </div>
+        <div id="opportunityModal" class="modal">
+            <div class="modal-content">
+              <span class="close">&times;</span>
+              <h3>Opportunity Details</h3>
+              <p><span class="opportunity-location"></span></p>
+              <p class="opportunity-description"></p>
+              <p class="opportunity-distance"></p>
+              <p>Volunteers: <span class="opportunity-volunteers"></span></p>
+            </div>
+          </div>
         <div id="map"></div>
       </div>
     </section>
@@ -68,8 +78,6 @@
   <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
-
-
   <script src="findOpportunities.js"></script>
 </body>
 </html>

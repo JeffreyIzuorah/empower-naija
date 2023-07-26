@@ -35,13 +35,9 @@ const lon2 = 57.5624505; // Replace with another valid longitude value
 const distance = calculateDistance(lat1, lon1, lat2, lon2);
 console.log("Distance:", distance); 
 
-
-
   function deg2rad(deg) {
     return deg * (Math.PI / 180);
   }
-
-
 
   function getUserLocation() {
     return new Promise((resolve, reject) => {
@@ -72,7 +68,6 @@ console.log("Distance:", distance);
     });
   }
   
-  
 
 // Function to fetch all opportunities from Firestore
 function getOpportunities() {
@@ -102,6 +97,12 @@ function displayOpportunities(userLocation, opportunities) {
     opportunities.forEach((opportunity) => {
       const opportunityCard = document.createElement("div");
       opportunityCard.classList.add("location");
+
+          // Add an event listener for the opportunity card
+    opportunityCard.addEventListener("click", () => {
+        // Call the function to display the full opportunity details
+        displayOpportunityDetails(userLocation, opportunity);
+      });
   
       const locationElement = document.createElement("h3");
       locationElement.textContent = opportunity.locationName; // Display the opportunity's location name
@@ -126,13 +127,23 @@ function displayOpportunities(userLocation, opportunities) {
       volunteerButton.classList.add("btn");
       volunteerButton.textContent = "Volunteer";
       opportunityCard.appendChild(volunteerButton);
+
+          // Add an event listener for the Volunteer button
+    volunteerButton.addEventListener("click", () => {
+        // Call a function to handle the volunteer action
+        // handleVolunteerAction(opportunity);
+      });
   
       opportunitiesContainer.appendChild(opportunityCard);
     });
   }
   
-  
-  
+ // Function to handle the volunteer action when the Volunteer button is clicked
+function handleVolunteerAction(opportunity) {
+    // Perform any action you want when the Volunteer button is clicked
+    // For example, you can show a message to indicate successful volunteering
+    alert(`You have volunteered for the opportunity at ${opportunity.locationName}`);
+  }
   
 
   // Function to sort the opportunities by distance from the user's location
@@ -164,8 +175,37 @@ function fetchAndDisplayOpportunities() {
       });
   }
   
-  // Call the function to fetch and display opportunities when the page loads
-  window.addEventListener("DOMContentLoaded", fetchAndDisplayOpportunities);
+  // Function to display the full opportunity details when the opportunity card is clicked
+function displayOpportunityDetails(userLocation, opportunity) {
+    const opportunityModal = document.getElementById("opportunityModal");
+    const locationElement = opportunityModal.querySelector(".opportunity-location");
+    const descriptionElement = opportunityModal.querySelector(".opportunity-description");
+    const distanceElement = opportunityModal.querySelector(".opportunity-distance");
+    const volunteersElement = opportunityModal.querySelector(".opportunity-volunteers");
+  
+    // Set the content of the opportunity details elements
+    locationElement.textContent = opportunity.locationName;
+    descriptionElement.textContent = opportunity.description;
+    const distance = calculateDistance(
+      userLocation.lat,
+      userLocation.lng,
+      opportunity.latitude,
+      opportunity.longitude
+    );
+    distanceElement.textContent = `Distance: ${distance.toFixed(2)} km`;
+    volunteersElement.textContent = `Volunteers: ${opportunity.volunteers.length}`;
+  
+  // Display the opportunity modal
+  opportunityModal.style.display = "block";
+  }
+
+  // Close the opportunity modal when the close button is clicked
+document.getElementById("opportunityModal").addEventListener("click", (event) => {
+    if (event.target.classList.contains("close")) {
+      const opportunityModal = document.getElementById("opportunityModal");
+      opportunityModal.style.display = "none";
+    }
+  });
   
 
   // Call the function to fetch and display opportunities when the page loads

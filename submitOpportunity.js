@@ -54,7 +54,8 @@ function getLocationName(lat, lng) {
             latitude: marker.getPosition().lat(),
             longitude: marker.getPosition().lng(),
             locationName: actualLocationName,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            volunteers: []
           })
           .then(() => {
             alert('Opportunity submitted successfully!');

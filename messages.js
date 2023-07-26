@@ -34,6 +34,7 @@ firebase.auth().onAuthStateChanged((user) => {
 const searchInput = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
 const contactList = document.querySelector('.contact-list');
+const chat = document.querySelector('.chat');
 const chatHeader = document.querySelector('.chat-header h2');
 const chatHistory = document.querySelector('.chat-history');
 const messageInput = document.querySelector('.message-input textarea');
@@ -77,7 +78,8 @@ function loadChatHistory(senderId, receiverId) {
   // Clear the chat history
   chatHeader.textContent = ''; // Clear the chat header
   chatHistory.innerHTML = ''; // Clear the chat history
-
+  // Set the chat history section to visible
+  chat.style.display = 'block';
   // Get the display name of the selected user
   db.collection('users')
     .doc(receiverId)
@@ -181,6 +183,7 @@ function loadChatHistory(senderId, receiverId) {
 
 
 function onContactClick(clickedElement) {
+    chat.style.display = 'block';
     // Get the current logged-in user
     const user = firebase.auth().currentUser;
     if (!user) {
