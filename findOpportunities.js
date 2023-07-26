@@ -78,6 +78,7 @@ function getOpportunities() {
         querySnapshot.forEach((doc) => {
           const opportunity = doc.data();
           opportunity.id = doc.id;
+          opportunity.volunteers = opportunity.volunteers || []; 
           opportunities.push(opportunity);
         });
         return opportunities;
@@ -125,16 +126,24 @@ function displayOpportunities(userLocation, opportunities) {
   
       const volunteerButton = document.createElement("button");
       volunteerButton.classList.add("btn");
-      volunteerButton.textContent = "Volunteer";
-      opportunityCard.appendChild(volunteerButton);
+    // Check if the user has volunteered for this opportunity
+    const userId = firebase.auth().currentUser.uid;
+    const userHasVolunteered = hasVolunteeredForOpportunity(opportunity, userId);
 
-          // Add an event listener for the Volunteer button
-    volunteerButton.addEventListener("click", () => {
-        // Call a function to handle the volunteer action
-        // handleVolunteerAction(opportunity);
-        displayOpportunityDetails(userLocation, opportunity);
+    if (userHasVolunteered) {
+      volunteerButton.textContent = "Withdraw";
+      volunteerButton.addEventListener("click", () => {
+        handleWithdrawAction(userLocation, opportunity);
       });
+    } else {
+      volunteerButton.textContent = "Volunteer";
+      volunteerButton.addEventListener("click", () => {
+        displayOpportunityDetails(userLocation, opportunity);
+        // handleVolunteerAction(userLocation, opportunity);
+      });
+    }
   
+    opportunityCard.appendChild(volunteerButton);
       opportunitiesContainer.appendChild(opportunityCard);
     });
   }
@@ -234,14 +243,14 @@ function displayOpportunityDetails(userLocation, opportunity) {
 
       // Check if the user has volunteered for this opportunity
   const userId = firebase.auth().currentUser.uid;
-  const userHasVolunteered = hasVolunteeredForOpportunity(opportunity, userId);
+//   const userHasVolunteered = hasVolunteeredForOpportunity(opportunity, userId);
 
-    // Display the 'Withdraw' button if the user has volunteered for this opportunity
-    if (userHasVolunteered) {
-        withdrawButton.style.display = "block";
-      } else {
-        withdrawButton.style.display = "none";
-      }
+    // // Display the 'Withdraw' button if the user has volunteered for this opportunity
+    // if (userHasVolunteered) {
+    //     withdrawButton.style.display = "block";
+    //   } else {
+    //     withdrawButton.style.display = "none";
+    //   }
 
       // Add an event listener for the Confirm button
   confirmButton.addEventListener("click", () => {
@@ -251,13 +260,13 @@ function displayOpportunityDetails(userLocation, opportunity) {
     opportunityModal.style.display = "none";
   });
 
-    // Add an event listener for the Withdraw button
-    withdrawButton.addEventListener("click", () => {
-        // Call the function to handle the volunteer withdrawal action
-        handleWithdrawAction(userLocation, opportunity);
-        // Close the opportunity modal after handling the withdrawal action
-        opportunityModal.style.display = "none";
-      });
+    // // Add an event listener for the Withdraw button
+    // withdrawButton.addEventListener("click", () => {
+    //     // Call the function to handle the volunteer withdrawal action
+    //     handleWithdrawAction(userLocation, opportunity);
+    //     // Close the opportunity modal after handling the withdrawal action
+    //     opportunityModal.style.display = "none";
+    //   });
 
   // Add an event listener for the Cancel button
   cancelButton.addEventListener("click", () => {
