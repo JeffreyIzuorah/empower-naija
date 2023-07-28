@@ -166,6 +166,26 @@ function handleVolunteerAction(userLocation, opportunity) {
         .then(() => {
           console.log("Volunteer successful.");
 
+                  // Automatically record the impact when the user volunteers for the opportunity
+        const date = new Date();
+        const hoursVolunteered = 0; // Initialize to 0 hours, user can edit later
+
+        // Add a new impact entry to the Firestore database
+        db.collection("impact_entries")
+          .add({
+            userId,
+            date: firebase.firestore.Timestamp.fromDate(date),
+            hours: hoursVolunteered,
+            peopleHelped: 0,
+            location: opportunity.locationName,
+          })
+          .then(() => {
+            console.log("Impact entry recorded.");
+          })
+          .catch((error) => {
+            console.error("Error recording impact entry:", error);
+          });
+
           const flashMessage = createFlashMessage("You have volunteered for this opportunity!", "flash-message");
           document.body.appendChild(flashMessage);
           // Optionally, you can refresh the opportunities data without reloading the whole page
