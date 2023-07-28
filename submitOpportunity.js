@@ -29,6 +29,7 @@ function getLocationName(lat, lng) {
       });
     });
   }
+  
 
   const submitForm = document.getElementById('submit-form');
 
@@ -37,41 +38,35 @@ function getLocationName(lat, lng) {
   
     const name = submitForm.name.value;
     const description = submitForm.description.value;
-    const location = submitForm.location.value;
+    const latitude = marker.getPosition().lat();
+    const longitude = marker.getPosition().lng();
   
     // Use Geocoding API to get the actual location name from the selected latitude and longitude
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ location: marker.getPosition() }, (results, status) => {
-      if (status === "OK") {
-        if (results[0]) {
-          const actualLocationName = results[0].formatted_address;
-  
-          // Save the opportunity to Firestore with the actual location name
-          db.collection('opportunities').add({
-            name: name,
-            description: description,
-            location: location,
-            latitude: marker.getPosition().lat(),
-            longitude: marker.getPosition().lng(),
-            locationName: actualLocationName,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            volunteers: []
-          })
-          .then(() => {
-            alert('Opportunity submitted successfully!');
-            submitForm.reset();
-          })
-          .catch((error) => {
-            console.error('Error submitting opportunity:', error);
-          });
-        } else {
-          console.error("No results found from Geocoding API.");
-        }
-      } else {
-        console.error("Geocoding API request failed. Status:", status);
-      }
-    });
+    getLocationName(latitude, longitude)
+      .then((actualLocationName) => {
+        // Save the opportunity to Firestore with the actual location name
+        db.collection('opportunities').add({
+          name: name,
+          description: description,
+          latitude: latitude,
+          longitude: longitude,
+          locationName: actualLocationName,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          volunteers: []
+        })
+        .then(() => {
+          alert('Opportunity submitted successfully!');
+          submitForm.reset();
+        })
+        .catch((error) => {
+          console.error('Error submitting opportunity:', error);
+        });
+      })
+      .catch((error) => {
+        console.error('Error getting location name:', error);
+      });
   });
+  
   
   
 
