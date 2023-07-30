@@ -24,7 +24,6 @@ auth.onAuthStateChanged(user => {
     // User is logged in
     const displayName = user.displayName;
     welcomeMessage.textContent = `Welcome, ${displayName}!`;
-    // ... Your existing code ...
 
 // Add this after the welcomeMessage.textContent line
 const notification = document.getElementById('notification');
