@@ -134,7 +134,5 @@ function initMap() {
    // Update the location input field with the selected latitude and longitude
    const locationInput = document.getElementById("location");
    locationInput.value = `${places[0].geometry.location.lat()}, ${places[0].geometry.location.lng()}`;
- });
-
-    
+ });   
 }

@@ -11,6 +11,7 @@ const firebaseConfig = {
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
   const auth = firebase.auth();
+  const perf = firebase.performance();
 
 // Add this at the top of messages.js
 let selectedReceiverId = null;
@@ -73,8 +74,10 @@ searchBtn.addEventListener('click', () => {
   
 
   let lastDisplayedTimestamp = null;
+  const chatTrace = perf.trace('loadChatHistory');
 
 function loadChatHistory(senderId, receiverId) {
+    chatTrace.start()
   // Clear the chat history
   chatHeader.textContent = ''; // Clear the chat header
   chatHistory.innerHTML = ''; // Clear the chat history
@@ -179,6 +182,7 @@ function loadChatHistory(senderId, receiverId) {
     .catch((error) => {
       console.error('Error adding sender to the contact list:', error);
     });
+    chatTrace.stop();
 }
 
 

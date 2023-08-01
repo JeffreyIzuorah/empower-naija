@@ -9,8 +9,8 @@ const firebaseConfig = {
   };
 
   firebase.initializeApp(firebaseConfig);
+  const perf = firebase.performance();
   const db = firebase.firestore();
-
 
 
 // Function to calculate the distance between two coordinates using the Haversine formula
@@ -89,9 +89,11 @@ function getOpportunities() {
       });
   }
   
+  const displayTrace = perf.trace('displayOpportunities');
 
 // Function to display the sorted opportunities on the page
 function displayOpportunities(userLocation, opportunities) {
+    displayTrace.start();
     const opportunitiesContainer = document.querySelector(".locations");
     opportunitiesContainer.innerHTML = ""; // Clear previous opportunities
   
@@ -146,6 +148,7 @@ function displayOpportunities(userLocation, opportunities) {
     opportunityCard.appendChild(volunteerButton);
       opportunitiesContainer.appendChild(opportunityCard);
     });
+    displayTrace.stop();
   }
   
 // Function to handle the volunteer action when the "Volunteer" button is clicked
