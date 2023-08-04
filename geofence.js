@@ -13,3 +13,31 @@ const firebaseConfig = {
  // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+
+  function handleClockIn(userLocation, opportunity, hoursSpent) {
+    // Record the impact entry with the number of hours spent
+    const date = new Date();
+  
+    // Add a new impact entry to the Firestore database
+    db.collection("impact_entries")
+      .add({
+        userId: firebase.auth().currentUser.uid,
+        date: firebase.firestore.Timestamp.fromDate(date),
+        hours: hoursSpent,
+        peopleHelped: 0,
+        location: opportunity.locationName,
+      })
+      .then(() => {
+        console.log("Impact entry recorded.");
+      })
+      .catch((error) => {
+        console.error("Error recording impact entry:", error);
+      });
+  }
+
+
+// Function to accept the clock-in
+// function acceptClockIn(opportunity) {
+//     handleVolunteerAction(userLocation, opportunity);
+//     startGeofenceMonitoring(opportunity, handleClockIn);
+//   }
