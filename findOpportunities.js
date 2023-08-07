@@ -93,7 +93,7 @@ function getOpportunities() {
 
 // Function to display the sorted opportunities on the page
 function displayOpportunities(userLocation, opportunities) {
-    displayTrace.start();
+    // displayTrace.start();
     const opportunitiesContainer = document.querySelector(".locations");
     opportunitiesContainer.innerHTML = ""; // Clear previous opportunities
   
@@ -148,7 +148,7 @@ function displayOpportunities(userLocation, opportunities) {
     opportunityCard.appendChild(volunteerButton);
       opportunitiesContainer.appendChild(opportunityCard);
     });
-    displayTrace.stop();
+    // displayTrace.stop();
   }
   
 // Function to handle the volunteer action when the "Volunteer" button is clicked
@@ -168,6 +168,12 @@ function handleVolunteerAction(userLocation, opportunity) {
         })
         .then(() => {
           console.log("Volunteer successful.");
+
+        // Start geofence monitoring when the user volunteers for the opportunity
+        startGeofenceMonitoring(opportunity, (enteredOpportunity) => {
+            // Callback function to handle the clock-in process when the user enters the opportunity area
+            handleClockIn(userLocation, enteredOpportunity);
+          });
 
                   // Automatically record the impact when the user volunteers for the opportunity
         const date = new Date();
@@ -294,19 +300,14 @@ function displayOpportunityDetails(userLocation, opportunity) {
 
       // Add an event listener for the Confirm button
   confirmButton.addEventListener("click", () => {
-    // Call the function to handle the volunteer action
-    handleVolunteerAction(userLocation, opportunity);
+        // Prompt the user with the toast message and clock-in process
+            handleVolunteerAction(userLocation, opportunity);
+            // Start geofence monitoring when the user volunteers for the opportunity
+            startGeofenceMonitoring(opportunity);
+
     // Close the opportunity modal after handling the volunteer action
     opportunityModal.style.display = "none";
   });
-
-    // // Add an event listener for the Withdraw button
-    // withdrawButton.addEventListener("click", () => {
-    //     // Call the function to handle the volunteer withdrawal action
-    //     handleWithdrawAction(userLocation, opportunity);
-    //     // Close the opportunity modal after handling the withdrawal action
-    //     opportunityModal.style.display = "none";
-    //   });
 
   // Add an event listener for the Cancel button
   cancelButton.addEventListener("click", () => {
@@ -396,6 +397,8 @@ function handleWithdrawAction(userLocation, opportunity) {
         .then(() => {
           console.log("Volunteer withdrawal successful.");
 
+          stopGeofenceMonitoring();
+
           const flashMessage = createFlashMessage("You have withdrawn from this opportunity!", "flash-message-withdraw");
           document.body.appendChild(flashMessage);
           // Refresh the opportunity details in the modal to update the volunteers count
@@ -406,3 +409,124 @@ function handleWithdrawAction(userLocation, opportunity) {
         });
     }
   }
+
+
+//Geofence handling
+
+// Function to start geofence monitoring
+function startGeofenceMonitoring(opportunity, onEnterOpportunityArea) {
+    const opportunityArea = {
+      latitude: opportunity.latitude,
+      longitude: opportunity.longitude,
+      radius: 0.1, // Replace with the desired radius in kilometers
+    };
+  
+    let userInsideOpportunity = false;
+    let entryTime = null;
+  
+    function checkUserLocation(userLocation) {
+      const distance = calculateDistance(
+        userLocation.lat,
+        userLocation.lng,
+        opportunityArea.latitude,
+        opportunityArea.longitude
+      );
+  
+      if (distance <= opportunityArea.radius) {
+        // User is in the opportunity area
+        if (!userInsideOpportunity) {
+          // User just entered the opportunity area
+          userInsideOpportunity = true;
+          entryTime = new Date();
+  
+          // Show the notification to the user
+        //   showOpportunityEntryNotification(opportunity);
+        showGeofenceToast(opportunity);
+        }
+      } else {
+        // User has left the opportunity area
+        if (userInsideOpportunity) {
+          // User just exited the opportunity area, calculate hours and record impact entry
+          const exitTime = new Date();
+          const hoursSpent = calculateHoursSpent(entryTime, exitTime);
+          if (hoursSpent > 0) {
+            handleClockIn(userLocation, opportunity, hoursSpent);
+          }
+          userInsideOpportunity = false;
+          entryTime = null;
+        }
+      }
+    }
+  
+    // Start monitoring user's location using a location tracking library
+    // For example, you can use the Geolocation API to get the user's current location
+    // and then call the checkUserLocation function with the user's location.
+    // For simplicity, I'm assuming you have a function `getUserLocation` to get the user's location.
+  
+    getUserLocation()
+      .then((userLocation) => {
+        checkUserLocation(userLocation); // Check the user's location initially
+  
+        setInterval(() => {
+          getUserLocation()
+            .then((userLocation) => {
+              checkUserLocation(userLocation);
+            })
+            .catch((error) => {
+              console.error("Error getting user location:", error);
+            });
+        }, 60000); // Check every minute, adjust as per your needs
+      })
+      .catch((error) => {
+        console.error("Error getting user location:", error);
+      });
+  }
+  
+  // Function to show the notification when the user enters the opportunity area
+  function showOpportunityEntryNotification(opportunity) {
+    // Replace this with your custom notification implementation
+    // For example, you can show a toast message, a modal, or any other type of notification
+    // that prompts the user to start recording their impact hours.
+    showGeofenceToast(opportunity);
+    // alert(`You are in the opportunity area: ${opportunity.locationName}`);
+    console.log("You are in the opportunity area:", opportunity.locationName);
+    console.log("Do you want to start recording your impact hours?");
+  }
+  
+  
+  // Function to calculate the number of hours spent between two Date objects
+  function calculateHoursSpent(entryTime, exitTime) {
+    const millisecondsSpent = exitTime.getTime() - entryTime.getTime();
+    const hoursSpent = millisecondsSpent / (1000 * 60 * 60); // Convert milliseconds to hours
+    return hoursSpent;
+  }
+  
+// Function to display the geofence toast
+function showGeofenceToast(opportunity) {
+    
+    const toast = new bootstrap.Toast(document.getElementById("geofenceToast"), {
+        autohide: false, // Prevent auto-hiding
+        delay: 10000, // Set a custom delay in milliseconds (10 seconds in this case)
+      });
+    const toastBody = toast._element.querySelector(".toast-body");
+    toastBody.innerHTML = `You are near ${opportunity.locationName}. Would you like to clock in? 
+      <button type="button" class="btn btn-success ms-2" onclick="handleClockIn(userLocation, opportunity)">Yes</button>`;
+  
+    toast.show();
+  }
+  
+
+  let geofenceIntervalId = null; // To store the interval ID
+
+function stopGeofenceMonitoring() {
+  if (geofenceIntervalId !== null) {
+    clearInterval(geofenceIntervalId);
+    geofenceIntervalId = null;
+    console.log("Geofence monitoring stopped.");
+  } else {
+    console.log("Geofence monitoring is not active.");
+  }
+}
+  
+  
+  
